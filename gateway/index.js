@@ -22,6 +22,7 @@ app.use(cookieParser());
 const learnerServiceUrl = 'http://localhost:8073';
 const instructorServiceUrl = 'http://localhost:8072';
 const adminServiceUrl = 'http://localhost:8071';
+const supportServiceUrl = 'http://localhost:8074';
 
 // Route requests based on path
 app.use('/api/learner', (req, res) => {
@@ -34,6 +35,9 @@ app.use('/api/instructor', (req, res) => {
 
 app.use('/api/admin', (req, res) => {
     proxy.web(req, res, { target: adminServiceUrl });
+});
+app.use('/api/support', (req, res) => {
+    proxy.web(req, res, { target: supportServiceUrl });
 });
 
 // Error handling middleware
