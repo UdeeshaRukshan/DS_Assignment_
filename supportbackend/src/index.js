@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const learner = require('./routes/learnerRoutes');
-
+// const learner = require('./routes/learnerRoutes');
+const tickerRouter=require('./routes/TicketRoutes');
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
@@ -22,12 +22,14 @@ app.use(cookieParser());
 const db = process.env.MONGODB_URI;
 
 mongoose
-    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect('mongodb+srv://rukshan:rukshan123@cluster0.w9lemr4.mongodb.net/AssignmentAF?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB successfully connected'))
     .catch(err => console.log(err));
 
 // Routes
-app.use('/api/learner', learner);
+// app.use('/api/learner', learner);
+
+app.use('/api', tickerRouter);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

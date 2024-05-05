@@ -37,7 +37,7 @@ app.use('/api/instructor', (req, res) => {
 app.use('/api/admin', (req, res) => {
     proxy.web(req, res, { target: adminServiceUrl });
 });
-app.use('/api/support', (req, res) => {
+app.use('/support', (req, res) => {
     proxy.web(req, res, { target: supportServiceUrl });
 });
 
