@@ -53,7 +53,6 @@ const CheckoutForm = () => {
       setPaymentSuccess(null);
     }
   };
-
   const cardStyle = {
     style: {
       base: {
@@ -75,7 +74,6 @@ const CheckoutForm = () => {
     }
   };
 
-  // Render the form with CardElement and submit button
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
       <CardElement options={cardStyle} />
@@ -96,12 +94,18 @@ export default CheckoutForm;
 
 const styles = {
   form: {
-    width: '400px',
-    margin: 'auto',
+    maxWidth: '400px',
+    margin: '40px auto',
+    padding: '20px',
+    backgroundColor: '#f7f7f7',
+    borderRadius: '8px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #ccc'
   },
   submitButton: {
-    marginTop: '16px',
-    padding: '10px 15px',
+    marginTop: '20px',
+    width: '100%',
+    padding: '12px',
     backgroundColor: '#5cb85c',
     color: '#fff',
     border: 'none',
@@ -115,10 +119,10 @@ const styles = {
   },
   error: {
     color: 'red',
-    marginTop: '8px',
+    marginTop: '10px',
   },
   success: {
     color: 'green',
-    marginTop: '8px',
+    marginTop: '10px',
   },
 };
