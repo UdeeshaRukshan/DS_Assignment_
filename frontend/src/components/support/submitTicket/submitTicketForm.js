@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';  // Import axios
 
 const SubmitTicketForm = () => {
   const [formData, setFormData] = useState({
@@ -16,17 +17,14 @@ const SubmitTicketForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting", formData);
-    // Here we would call the backend API
+    // Use axios to call the backend API
     try {
-      const response = await fetch("/api/tickets", {
-        method: "POST",
+      const response = await axios.post("http://localhost:8074/api/tickets", formData, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
       });
-      const data = await response.json();
-      console.log(data); // Process data received from backend
+      console.log(response.data); // Process data received from backend
     } catch (error) {
       console.error("Error:", error);
     }
@@ -39,10 +37,7 @@ const SubmitTicketForm = () => {
     >
       <h1 className="mb-4 font-semibold text-lg">Support Portal</h1>
       <div className="mb-6">
-        <label
-          htmlFor="name"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
           Name:
         </label>
         <input
@@ -55,10 +50,7 @@ const SubmitTicketForm = () => {
         />
       </div>
       <div className="mb-6">
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
           Email:
         </label>
         <input
@@ -71,10 +63,7 @@ const SubmitTicketForm = () => {
         />
       </div>
       <div className="mb-6">
-        <label
-          htmlFor="category"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="category" className="block text-sm font-medium text-gray-700">
           Category:
         </label>
         <input
@@ -87,10 +76,7 @@ const SubmitTicketForm = () => {
         />
       </div>
       <div className="mb-6">
-        <label
-          htmlFor="subject"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
           Subject:
         </label>
         <input
@@ -103,10 +89,7 @@ const SubmitTicketForm = () => {
         />
       </div>
       <div className="mb-6">
-        <label
-          htmlFor="message"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="message" className="block text-sm font-medium text-gray-700">
           Message:
         </label>
         <textarea
