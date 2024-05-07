@@ -7,6 +7,17 @@ const tickerRouter=require('./routes/TicketRoutes');
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
+const {sendActivationEmail}=require('./utils/sendEmail');
+const userEmailAddress = 'user@example.com';
+const activationToken = 'some-unique-token-for-activation';
+const resetToken = 'some-unique-token-for-password-reset';
+
+// Generate activation and reset links (assuming your app uses query parameters for tokens)
+const activationLink = `http://yourdomain.com/activate?token=${activationToken}`;
+const resetLink = `http://yourdomain.com/reset-password?token=${resetToken}`;
+
+// Send an activation email
+sendActivationEmail(userEmailAddress, activationLink);
 
 app.use(cors(
     {
