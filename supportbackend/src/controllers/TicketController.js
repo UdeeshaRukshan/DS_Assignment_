@@ -1,5 +1,5 @@
 const Ticket = require("../models/TicketModel"); // Update the path according to your project structure
-
+const sendEmail=require('../utils/sendEmail')
 // Create a new Ticket
 const createTicket = async (req, res) => {
   try {
@@ -59,7 +59,12 @@ const resolveTicket = async (req, res) => {
     if (!ticket) {
       return res.status(404).send({ error: "Ticket not found" });
     }
-
+    sendEmail(
+        ticket.email, // Assuming `email` field in ticket has the recipient's email
+        'Ticket Resolved',
+        `Your ticket with subject '${ticket.subject}' has been resolved. Thank you for your patience!`
+       
+    );
     res.status(200).send(ticket);
   } catch (error) {
     res.status(500).send(error);
