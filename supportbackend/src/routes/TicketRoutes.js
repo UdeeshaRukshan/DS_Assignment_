@@ -4,7 +4,9 @@ const {
     createTicket,
     getAllTickets,
     getTicketById,
-    deleteTicket
+    deleteTicket,
+    addReplyToTicket,
+    resolveTicket
 } = require('../controllers/TicketController'); // Ensure this path is correct
 
 // Route to create a new ticket
@@ -18,5 +20,11 @@ TicketRouter.get('/tickets/:id', getTicketById);
 
 // Route to delete a specific ticket by ID
 TicketRouter.delete('/tickets/:id', deleteTicket);
+
+TicketRouter.post('/tickets/:ticketId/replies', addReplyToTicket);
+
+// Route to mark a ticket as resolved
+TicketRouter.patch('/tickets/:ticketId/resolve', resolveTicket);
+
 
 module.exports = TicketRouter;
