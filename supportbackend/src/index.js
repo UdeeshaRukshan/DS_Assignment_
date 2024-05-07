@@ -19,7 +19,7 @@ app.use(cors(
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
-sendTestEmail()
+// sendTestEmail()
 const db = process.env.MONGODB_URI;
 
 mongoose
