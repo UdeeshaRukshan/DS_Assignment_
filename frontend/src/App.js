@@ -16,8 +16,6 @@ function App() {
         <Routes>
           <Route path="/ticket/submit" element={<SubmitTicketForm />} />
           <Route path="/ticket/mytickets" element={<MyTickets />} />
-          {/* Uncomment and ensure the component is imported if you want to use it */}
-          {/* <Route path="/support/supportQues" element={<SupportQuesPage />} /> */}
         </Routes>
       </Router>
     </div>

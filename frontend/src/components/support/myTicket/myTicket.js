@@ -9,7 +9,7 @@ export function MyTickets() {
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [replyToEmail, setReplyToEmail] = useState('');
   const [replyMessage, setReplyMessage] = useState('');  // State for managing reply message
-
+  const [selectedTicket,setSelectedTicket]=useState();
   const [replyFormData, setReplyFormData] = useState({
     name: "",
     email: "",
@@ -34,6 +34,7 @@ useEffect(() => {
     fetchTickets();
   }, []);
 
+  console.log(selectedTicket);
   const handleRemove = async (ticketId) => {
     try {
       await axios.delete(`http://localhost:8074/api/tickets/${ticketId}`);
@@ -44,12 +45,13 @@ useEffect(() => {
     }
   };
 
-  const handleReply = (email) => {
+  const handleReply = (ticket) => {
     setReplyToEmail(email);
     setIsReplyModalOpen(true);
+    setSelectedTicket(ticket);
 };
 
-
+console.log(selectedTicket);
   const handleResolve = (email) => {
     console.log(email);
   
@@ -88,7 +90,7 @@ useEffect(() => {
                 <input
                     type="text"
                     name="name"
-                    value={replyFormData.name}
+                    value={selectedTicket.name}
                     onChange={handleReplyChange}
                     required
                     placeholder="Name"
@@ -97,7 +99,7 @@ useEffect(() => {
                 <input
                     type="email"
                     name="email"
-                    value={replyFormData.email}
+                    value={selectedTicket.email}
                     onChange={handleReplyChange}
                     required
                     placeholder="Email"
@@ -106,7 +108,7 @@ useEffect(() => {
                 <input
                     type="text"
                     name="category"
-                    value={replyFormData.category}
+                    value={selectedTicket.category}
                     onChange={handleReplyChange}
                     required
                     placeholder="Category"
@@ -115,7 +117,7 @@ useEffect(() => {
                 <input
                     type="text"
                     name="subject"
-                    value={replyFormData.subject}
+                    value={selectedTicket.subject}
                     onChange={handleReplyChange}
                     required
                     placeholder="Subject"
@@ -123,7 +125,7 @@ useEffect(() => {
                 />
                 <textarea
                     name="message"
-                    value={replyFormData.message}
+                    value={selectedTicket.message}
                     onChange={handleReplyChange}
                     required
                     placeholder="Message"
@@ -131,7 +133,7 @@ useEffect(() => {
                 />
                 <textarea
                     name="reply"
-                    value={replyFormData.reply}
+                    value={selectedTicket.reply}
                     onChange={handleReplyChange}
                     required
                     placeholder="Reply message"
@@ -159,7 +161,9 @@ useEffect(() => {
     </Table.Head>
     <Table.Body className="divide-y">
       {tickets.map((ticket, index) => (
+      
         <Table.Row key={index} className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+          {setSelectedTicket(ticket)}
           <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
             {ticket.name}
           </Table.Cell>
@@ -172,7 +176,7 @@ useEffect(() => {
 
           <Table.Cell>
             <div className="flex">
-            <button onClick={() => handleReply(true)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Reply</button>
+            <button onClick={() => handleReply(ticket)} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Reply</button>
             <button onClick={() => handleRemove(ticket._id)} className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reject</button>
             <button onClick={() => handleResolve("Hello this is resp;ved")} className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Resolve</button>
             </div>
