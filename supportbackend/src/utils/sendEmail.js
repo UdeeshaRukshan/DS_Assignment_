@@ -1,24 +1,28 @@
+// Require Nodemailer
 const nodemailer = require('nodemailer');
-const emailConfig = require('../config/emailConfig');
 
-// Function to send a simple email
-const sendEmail = (to, subject, text) => {
-  const transporter = nodemailer.createTransport(emailConfig);
-
-  const mailOptions = {
-    from: emailConfig.auth.user, // assuming this is your email
-    to: to,
-    subject: subject,
-    text: text,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Failed to send email:', error);
-    } else {
-      console.log('Email sent successfully:', info.response);
+// Create a transporter object using SMTP
+let transporter = nodemailer.createTransport({
+    service: 'zoho',
+    auth: {
+        user: 'udeeshagamage12@zohomail.com',
+        pass: 'Udee@#$%2003'
     }
-  });
+});
+
+// Create an email message
+let mailOptions = {
+    from: 'your_email@gmail.com',
+    to: 'recipient_email@example.com',
+    subject: 'Test Email',
+    text: 'This is a test email sent from Node.js using Nodemailer.'
 };
 
-module.exports = { sendEmail };
+// Send the email
+transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('Email sent: ' + info.response);
+    }
+});
