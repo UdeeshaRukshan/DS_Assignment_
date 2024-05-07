@@ -4,20 +4,10 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 // const learner = require('./routes/learnerRoutes');
 const tickerRouter=require('./routes/TicketRoutes');
+const sendTestEmail=require('./utils/sendEmail')
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
-const {sendActivationEmail}=require('./utils/sendEmail');
-const userEmailAddress = 'user@example.com';
-const activationToken = 'some-unique-token-for-activation';
-const resetToken = 'some-unique-token-for-password-reset';
-
-// Generate activation and reset links (assuming your app uses query parameters for tokens)
-const activationLink = `http://yourdomain.com/activate?token=${activationToken}`;
-const resetLink = `http://yourdomain.com/reset-password?token=${resetToken}`;
-
-// Send an activation email
-sendActivationEmail(userEmailAddress, activationLink);
 
 app.use(cors(
     {
@@ -29,7 +19,7 @@ app.use(cors(
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
-
+sendTestEmail()
 const db = process.env.MONGODB_URI;
 
 mongoose
