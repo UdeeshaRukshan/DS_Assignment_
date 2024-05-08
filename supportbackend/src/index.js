@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 // const learner = require('./routes/learnerRoutes');
 const tickerRouter=require('./routes/TicketRoutes');
-const sendTestEmail=require('./utils/sendEmail')
+const paymentRouter=require('./routes/paymentRoutes')
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
@@ -31,6 +31,7 @@ mongoose
 // app.use('/api/learner', learner);
 
 app.use('/api', tickerRouter);
+app.use('/api', paymentRouter);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

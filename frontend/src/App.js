@@ -24,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/ticket/submit" element={<SubmitTicketForm />} />
           <Route path="/ticket/mytickets" element={<MyTickets />} />
+          <Route path="/payment" element={<PaymentComponent />} />
         
           <Route path="/emoji" element={<HoverRating/>} />  
          
