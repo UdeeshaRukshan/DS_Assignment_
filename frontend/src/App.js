@@ -7,8 +7,7 @@ import { MyTickets } from './components/support/myTicket/myTicket.js';
 import EmojiFeedback from './components/feedback/emojiFeedback.js';
 import HoverRating from './components/feedback/muiFeedback.js'
 import styled from "styled-components";
-// Import other components if necessary
-// import SupportQuesPage from './components/support/SupportQuesPage';
+
 const AppStyles = styled.div`
  display: flex;
  align-items: center;
@@ -25,7 +24,6 @@ function App() {
           <Route path="/ticket/submit" element={<SubmitTicketForm />} />
           <Route path="/ticket/mytickets" element={<MyTickets />} />
           <Route path="/payment" element={<PaymentComponent />} />
-        
           <Route path="/emoji" element={<HoverRating/>} />  
          
         </Routes>
