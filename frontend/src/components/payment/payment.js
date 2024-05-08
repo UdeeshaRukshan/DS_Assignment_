@@ -13,7 +13,7 @@ const PaymentComponent = () => {
       {/* Wrap the CheckoutForm component with the Elements component and provide the Stripe promise */}
       <Elements stripe={stripePromise}>
         <CheckoutForm />
-        <Notification/>
+        <Notification message="Payment is done"/>
       </Elements>
     </div>
   );

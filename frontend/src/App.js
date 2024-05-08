@@ -7,6 +7,7 @@ import { MyTickets } from './components/support/myTicket/myTicket.js';
 import EmojiFeedback from './components/feedback/emojiFeedback.js';
 import HoverRating from './components/feedback/muiFeedback.js'
 import styled from "styled-components";
+import CheckoutForm from './components/payment/checkoutForm.js';
 
 const AppStyles = styled.div`
  display: flex;
@@ -25,6 +26,7 @@ function App() {
           <Route path="/ticket/mytickets" element={<MyTickets />} />
           <Route path="/payment" element={<PaymentComponent />} />
           <Route path="/emoji" element={<HoverRating/>} />  
+          <Route path="/checkout" element={<CheckoutForm/>} />
          
         </Routes>
       </Router>
