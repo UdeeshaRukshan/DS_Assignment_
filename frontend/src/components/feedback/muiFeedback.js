@@ -34,7 +34,7 @@ export default function HoverRating() {
       }}
     >
       <Rating
-        name="hover-feedback"
+        Rating name="size-large" defaultValue={2} size="large"
         value={value}
         precision={0.5}
         getLabelText={getLabelText}
