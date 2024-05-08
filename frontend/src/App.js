@@ -5,6 +5,7 @@ import PaymentComponent from './components/payment/payment';
 import SubmitTicketForm from './components/support/submitTicket/submitTicketForm.js';
 import { MyTickets } from './components/support/myTicket/myTicket.js';
 import EmojiFeedback from './components/feedback/emojiFeedback.js';
+import HoverRating from './components/feedback/muiFeedback.js'
 import styled from "styled-components";
 // Import other components if necessary
 // import SupportQuesPage from './components/support/SupportQuesPage';
@@ -24,13 +25,8 @@ function App() {
           <Route path="/ticket/submit" element={<SubmitTicketForm />} />
           <Route path="/ticket/mytickets" element={<MyTickets />} />
         
-          <Route path="/emoji" element={<AppStyles>
-            <EmojiFeedback
-              activeReaction={activeReaction}
-              setActiveReaction={setActiveReaction}
-            />
-          </AppStyles>} />  
-          {/* <Route path="/emoji" element={<Emoji />} /> */}
+          <Route path="/emoji" element={<HoverRating/>} />  
+         
         </Routes>
       </Router>
     </div>

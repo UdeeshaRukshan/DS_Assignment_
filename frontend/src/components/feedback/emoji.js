@@ -2,7 +2,7 @@ import Lottie from "react-lottie";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 // Helper for handling lottie animation data
-import selectAnimationData from "../lotties";
+// import selectAnimationData from "../lotties";
 const EmojiWrapper = styled(motion.div)`
  cursor: pointer;
  margin: 0 12px;
@@ -27,7 +27,7 @@ const Emoji = ({ reaction, isSelected, setActiveReaction }) => {
  const animationOptions = {
  loop: true,
  autoplay: false,
- animationData: selectAnimationData(reaction),
+//  animationData: selectAnimationData(reaction),
  rendererSettings: {
  preserveAspectRatio: "xMidYMid slice",
  },
