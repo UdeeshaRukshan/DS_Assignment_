@@ -34,11 +34,13 @@ function CheckoutForm() {
       <div className="flex">
         {/* Left Column: User Details */}
         <div className="w-1/2 pr-4">
-          <PaymentComponent/>
+          {/* <PaymentComponent/> */}
+          <h1>THis is the left Side </h1>
         </div>
 
         {/* Right Column: Selected Item and Total Price */}
         <div className="w-1/2 pl-4">
+          
           <div className="border p-4 rounded mb-4">
             <h3 className="text-lg font-semibold mb-2">Selected Item</h3>
             <p className="mb-2">{selectedItem.name}</p>
