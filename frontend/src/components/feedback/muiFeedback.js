@@ -27,7 +27,8 @@ export default function HoverRating() {
   return (
     <Box
       sx={{
-        width: 200,
+        width: 400,
+        height:200,
         display: 'flex',
         alignItems: 'center',
       }}
