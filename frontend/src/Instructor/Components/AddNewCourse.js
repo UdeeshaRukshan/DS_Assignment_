@@ -1,67 +1,43 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, message, Upload } from 'antd';
+import { Form, Input, Button, Card, message } from 'antd';
 import { Container, Row, Col } from 'react-bootstrap';
-import { UploadOutlined, PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AddNewCourse = () => {
     const [loading, setLoading] = useState(false);
-    const [contentFields, setContentFields] = useState([{ title: '', files: [] }]);
     const navigate = useNavigate();
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
 
-    const handleAddContent = () => {
-        setContentFields([...contentFields, { title: '', files: [] }]);
-    };
-
-    const handleRemoveContent = (index) => {
-        const updatedContentFields = [...contentFields];
-        updatedContentFields.splice(index, 1);
-        setContentFields(updatedContentFields);
-    };
-
-    const handleFileUpload = (file, index) => {
-        const newContentFields = [...contentFields];
-        newContentFields[index].files.push(file.originFileObj);
-        setContentFields(newContentFields);
-        return false; // Return false to prevent default file upload behavior
-    };
-
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            const formData = new FormData();
-            formData.append('title', values.title);
-            formData.append('description', values.description);
-            formData.append('requirements', values.requirements);
-            formData.append('price', values.price);
+            const { title, description, requirements, price } = values;
 
-            contentFields.forEach((field, index) => {
-                field.files.forEach((file) => {
-                    formData.append(`content[${index}][title]`, field.title);
-                    formData.append(`content[${index}][file]`, file);
-                });
-            });
+            const formData = {
+                title,
+                description,
+                requirements,
+                price,
+                instructorId: localStorage.getItem('instructorId')
+            };
 
             const token = localStorage.getItem('token');
             const response = await axios.post('http://localhost:8072/api/instructor/courses', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
             });
 
             if (response.status === 201) {
                 message.success('Course added successfully');
-                navigate('/');
             } else {
                 message.error('Failed to add new course. Please try again.');
             }
-            console.log(message)
         } catch (error) {
             console.error('Error:', error.message);
             if (error.response) {
@@ -74,12 +50,11 @@ const AddNewCourse = () => {
         }
     };
 
-
     return (
-        <Container style={{ minHeight: '100vh' }}>
-            <Row justify="center" align="middle" style={{ height: '100%' }}>
-                <Col xs={24} sm={20} md={16} lg={12} xl={8}>
-                    <Card title="Add New Course" style={{ borderRadius: '10px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+        <Container className="py-5">
+            <Row justify="center" align="middle">
+                <Col xs={24} sm={20} md={16} lg={12}>
+                    <Card title="Add New Course" className="rounded shadow-sm">
                         <Form
                             name="addCourse"
                             initialValues={{ remember: true }}
@@ -91,7 +66,7 @@ const AddNewCourse = () => {
                                 name="title"
                                 rules={[{ required: true, message: 'Please input the title of the course!' }]}
                             >
-                                <Input />
+                                <Input size="large" />
                             </Form.Item>
 
                             <Form.Item
@@ -99,14 +74,14 @@ const AddNewCourse = () => {
                                 name="description"
                                 rules={[{ required: true, message: 'Please input the description of the course!' }]}
                             >
-                                <Input.TextArea />
+                                <Input.TextArea autoSize={{ minRows: 3 }} />
                             </Form.Item>
 
                             <Form.Item
                                 label="Requirements"
                                 name="requirements"
                             >
-                                <Input.TextArea />
+                                <Input.TextArea autoSize={{ minRows: 3 }} />
                             </Form.Item>
 
                             <Form.Item
@@ -114,60 +89,21 @@ const AddNewCourse = () => {
                                 name="price"
                                 rules={[
                                     { required: true, message: 'Please input the price of the course!' },
-                                    { validator: (_, value) => {
+                                    {
+                                        validator: (_, value) => {
                                             if (!isNaN(value) && parseFloat(value) >= 0) {
                                                 return Promise.resolve();
                                             }
                                             return Promise.reject('Please input a valid price!');
-                                        }}
+                                        }
+                                    }
                                 ]}
                             >
-                                <Input />
+                                <Input type="number" size="large" />
                             </Form.Item>
 
-                            {contentFields.map((content, index) => (
-                                <div key={index}>
-                                    <Form.Item
-                                        label={`Content ${index + 1}`}
-                                        name={['content', index, 'title']}
-                                        rules={[{ required: true, message: 'Please input the content title!' }]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label={`Upload Files for Content ${index + 1}`}
-                                        name={['content', index, 'files']}
-                                        valuePropName="fileList"
-                                        getValueFromEvent={(e) => {
-                                            if (Array.isArray(e)) {
-                                                return e;
-                                            }
-                                            return e && e.fileList;
-                                        }}
-                                    >
-                                        <Upload
-                                            beforeUpload={(file) => handleFileUpload(file, index)}
-                                            maxCount={3} // Adjust maxCount as needed
-                                            multiple={true}
-                                            listType="text"
-                                            accept=".pdf,.doc,.docx,.mp4"
-                                        >
-                                            <Button icon={<UploadOutlined />}>Upload</Button>
-                                        </Upload>
-                                    </Form.Item>
-                                    {index > 0 && (
-                                        <Button type="danger" icon={<MinusCircleOutlined />} onClick={() => handleRemoveContent(index)}>
-                                            Remove Content
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
-                            <Button type="dashed" onClick={handleAddContent} block icon={<PlusOutlined />}>
-                                Add Content
-                            </Button>
-
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" loading={loading} style={{ width: '100%' }}>
+                                <Button type="primary" htmlType="submit" loading={loading} block>
                                     Add Course
                                 </Button>
                             </Form.Item>

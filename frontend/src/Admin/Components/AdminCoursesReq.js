@@ -13,7 +13,7 @@ export default function AdminCoursesReq() {
     const fetchAllCourses = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8071/api/admin/all-courses', {
+            const response = await fetch('http://localhost:8070/api/admin/all-courses', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -35,21 +35,22 @@ export default function AdminCoursesReq() {
 
     const updateCourseStatus = async (courseId, status) => {
         try {
-            const response = await fetch(`http://localhost:8071/api/admin/course/${courseId}/status`, {
+            const response = await fetch(`http://localhost:8070/api/admin/course/${courseId}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ status })
+                body: JSON.stringify({ courseId, status })
             });
 
             if (response.ok) {
-                setCourses(prevCourses =>
-                    prevCourses.map(course =>
-                        course._id === courseId ? { ...course, status } : course
-                    )
-                );
+                setCourses(prevCourses => prevCourses.map(course => {
+                    if (course._id === courseId) {
+                        return { ...course, status };
+                    }
+                    return course;
+                }));
                 message.success('Course status updated successfully');
             } else {
                 message.error('Failed to update course status');
@@ -57,19 +58,6 @@ export default function AdminCoursesReq() {
         } catch (error) {
             console.error('Error:', error);
             message.error('An error occurred. Please try again.');
-        }
-    };
-
-    const getStatusColor = status => {
-        switch (status) {
-            case 'pending':
-                return '#fffdaf';
-            case 'accepted':
-                return '#90EE90';
-            case 'rejected':
-                return '#FF7F7F';
-            default:
-                return '#fff';
         }
     };
 
@@ -86,20 +74,17 @@ export default function AdminCoursesReq() {
                                         title={course.title}
                                         style={{
                                             width: '100%',
-                                            backgroundColor: getStatusColor(course.status)
+                                            backgroundColor:
+                                                course.status === 'pending' ? '#fffdaf' :
+                                                    course.status === 'accepted' ? '#90EE90' :
+                                                        course.status === 'rejected' ? '#FF7F7F' : ''
                                         }}
                                     >
                                         <p>{course.description}</p>
                                         <p>Price: ${course.price}</p>
-                                        <Button onClick={() => updateCourseStatus(course._id, 'pending')}>
-                                            Pending
-                                        </Button>
-                                        <Button onClick={() => updateCourseStatus(course._id, 'accepted')}>
-                                            Accepted
-                                        </Button>
-                                        <Button onClick={() => updateCourseStatus(course._id, 'rejected')}>
-                                            Rejected
-                                        </Button>
+                                        <Button onClick={() => updateCourseStatus(course._id, 'pending')}>Pending</Button>
+                                        <Button onClick={() => updateCourseStatus(course._id, 'accepted')}>Accepted</Button>
+                                        <Button onClick={() => updateCourseStatus(course._id, 'rejected')}>Rejected</Button>
                                     </Card>
                                 </div>
                             ))}

@@ -19,7 +19,7 @@ export default function LearnerMyCourses() {
     const fetchEnrolledCourses = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:8073/api/learner/enrollments/${learnerId}`, {
+            const response = await fetch(`http://localhost:8070/api/learner/enrollments/${learnerId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -42,7 +42,7 @@ export default function LearnerMyCourses() {
 
     const fetchCourses = async (courseIds) => {
         try {
-            const response = await fetch('http://localhost:8073/api/learner/all-courses', {
+            const response = await fetch('http://localhost:8070/api/learner/all-courses', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -64,7 +64,7 @@ export default function LearnerMyCourses() {
 
     const handleUnenroll = async () => {
         try {
-            const response = await fetch('http://localhost:8073/api/learner/enrollments', {
+            const response = await fetch('http://localhost:8070/api/learner/enrollments', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ export default function LearnerMyCourses() {
         const completed = e.target.checked;
         setCheckedContentId(completed ? contentId : null);
         try {
-            const response = await fetch('http://localhost:8073/api/learner/enrollments/progress', {
+            const response = await fetch('http://localhost:8070/api/learner/enrollments/progress', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
