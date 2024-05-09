@@ -53,11 +53,13 @@ exports.loginInstructor = async (req, res) => {
     }
 };
 
-
 exports.addNewCourse = async (req, res) => {
     try {
-        const { title, description, requirements, price } = req.body;
-        const instructorId = req.user.id;
+        const { title, description, requirements, price, instructorId } = req.body;
+
+        if (!title || !description) {
+            return res.status(400).json({ message: 'Title and description are required' });
+        }
 
         const newCourse = new Course({
             title,
@@ -67,29 +69,6 @@ exports.addNewCourse = async (req, res) => {
             instructor: instructorId
         });
 
-        if (req.files) {
-            const files = req.files;
-
-            const content = [];
-            for (let file of files) {
-                const fileExtension = path.extname(file.originalname);
-                const fileName = `${Date.now()}${fileExtension}`;
-                const uploadPath = path.join(__dirname, '../uploads/', fileName);
-
-                await file.mv(uploadPath);
-
-                const fileUrl = `/uploads/${fileName}`;
-
-                content.push({
-                    title: file.originalname,
-                    doc_type: file.mimetype.split('/')[0],
-                    url: fileUrl
-                });
-            }
-
-            newCourse.content = content;
-        }
-
         const savedCourse = await newCourse.save();
         res.status(201).json(savedCourse);
     } catch (err) {
@@ -97,6 +76,7 @@ exports.addNewCourse = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
 
 exports.getAllCoursesByInstructorId = async (req, res) => {
     try {
