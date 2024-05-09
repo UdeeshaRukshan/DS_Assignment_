@@ -5,11 +5,12 @@ import {
     MenuUnfoldOutlined,
     UserOutlined,
     LogoutOutlined,
-    BookOutlined,
+    BookOutlined, PlusCircleOutlined,
 } from '@ant-design/icons';
 import InstructorAllCourses from "./InstructorAllCourses";
 import InstructorProfile from "./InstructorProfile";
 import {useNavigate} from "react-router-dom";
+import AddNewCourse from "../Components/AddNewCourse";
 
 const { Header, Sider, Content } = Layout;
 
@@ -41,11 +42,14 @@ const InstructorHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
                 <Menu.Item key="1" icon={<BookOutlined />}>
                     All Courses
                 </Menu.Item>
-                <Menu.Item key="2" icon={<UserOutlined />}>
+                <Menu.Item key="2" icon={<PlusCircleOutlined />}>
+                    Add Course
+                </Menu.Item>
+                <Menu.Item key="3" icon={<UserOutlined />}>
                     Profile
                 </Menu.Item>
                 <hr style={{marginTop:'30px', color:'white'}} />
-                <Menu.Item key="3" style={{marginTop:'30px'}} icon={<LogoutOutlined style={{color:"orangered"}} />} onClick={handleLogout}>
+                <Menu.Item key="4" style={{marginTop:'30px'}} icon={<LogoutOutlined style={{color:"orangered"}} />} onClick={handleLogout}>
                     Logout
                 </Menu.Item>
             </Menu>
@@ -83,7 +87,8 @@ const App = () => {
                 </Header>
                 <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280 }}>
                     {selectedMenuItem === '1' && <InstructorAllCourses />}
-                    {selectedMenuItem === '2' && <InstructorProfile />}
+                    {selectedMenuItem === '2' && <AddNewCourse />}
+                    {selectedMenuItem === '3' && <InstructorProfile />}
                 </Content>
             </Layout>
         </Layout>

@@ -35,7 +35,7 @@ const GetAllCoursesByInstructorId = () => {
 
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(`http://localhost:8072/api/instructor/${instructorId}/courses`);
+                const response = await axios.get(`http://localhost:8070/api/instructor/${instructorId}/courses`);
                 setCourses(response.data);
                 setLoading(false);
             } catch (error) {
@@ -51,7 +51,7 @@ const GetAllCoursesByInstructorId = () => {
         setSelectedCourseId(courseId);
         setModalVisible(true);
         try {
-            const response = await axios.get(`http://localhost:8072/api/instructor/course/${courseId}`);
+            const response = await axios.get(`http://localhost:8070/api/instructor/course/${courseId}`);
             setCourse(response.data);
         } catch (error) {
             setError(error.response?.data?.message || 'Failed to fetch course details');
@@ -70,11 +70,11 @@ const GetAllCoursesByInstructorId = () => {
             const data = {
                 title: values.title,
                 file: fileUrl,
-                doc_type: values.doc_type // Add doc_type field
+                doc_type: values.doc_type
             };
 
             console.log("Form Data: ", data);
-            const response = await axios.post(`http://localhost:8072/api/instructor/course/${selectedCourseId}/content`, data, {
+            const response = await axios.post(`http://localhost:8070/api/instructor/course/${selectedCourseId}/content`, data, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },

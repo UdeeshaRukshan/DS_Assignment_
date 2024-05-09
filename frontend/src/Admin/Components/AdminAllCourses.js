@@ -13,7 +13,7 @@ const AdminAllCourses = () => {
     const fetchAllCourses = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8071/api/admin/all-courses', {
+            const response = await fetch('http://localhost:8070/api/admin/all-courses', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
