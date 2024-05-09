@@ -43,7 +43,7 @@ exports.authenticate = async (req, res, next) => {
     }
     const token = authHeader.split(' ')[1];
     try {
-        const verified = jwt.verify(token, SECRET_KEY);
+        const verified = jwt.verify(token, SECRET_KEY); // Ensure SECRET_KEY is correctly defined
         console.log('Verified user:', verified);
         req.user = verified;
         next();
@@ -52,3 +52,4 @@ exports.authenticate = async (req, res, next) => {
         res.status(400).send('Invalid Token');
     }
 };
+
