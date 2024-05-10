@@ -29,20 +29,20 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/ticket/submit" element={<SubmitTicketForm />} />
-          <Route path="/ticket/mytickets" element={<MyTickets />} />
+          <Route path="/submit" element={<SubmitTicketForm />} />
+          <Route path="/mytickets" element={<MyTickets />} />
           <Route path="/payment" element={<PaymentComponent />} />
           <Route path="/emoji" element={<HoverRating/>} />  
           <Route path="/checkout" element={<CheckoutForm/>} />
           <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
-                <Route path="/instructor/home" element={<InstructorHome />} />
+        <Route path="/instructor/home" element={<InstructorHome />} />
 
-                <Route path="/learner/home" element={<LearnerHome />} />
+        <Route path="/learner/home" element={<LearnerHome />} />
 
-                <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/home" element={<AdminHome />} />
             
         </Routes>
       </Router>

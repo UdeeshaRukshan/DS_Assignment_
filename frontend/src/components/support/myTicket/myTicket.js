@@ -201,82 +201,84 @@ export function MyTickets() {
           </div>
         </div>
       ) : (
-        <div className="tableStyle flex items-center justify-center h-screen">
-          <div className=" max-w-4xl relative shadow-md sm:rounded-lg">
-            <Table
-              striped
-              hoverable={true}
-              className="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-            >
-              <Table.Head className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <Table.HeadCell>Name</Table.HeadCell>
-                <Table.HeadCell>Email</Table.HeadCell>
-                <Table.HeadCell>Category</Table.HeadCell>
-                <Table.HeadCell>Subject</Table.HeadCell>
-                <Table.HeadCell>Message</Table.HeadCell>
-                <Table.HeadCell>Reply</Table.HeadCell>
-                <Table.HeadCell>Actions</Table.HeadCell>
-                
-              </Table.Head>
-              <Table.Body className="divide-y">
-                {tickets.map((ticket, index) => (
-                  <Table.Row
-                    key={index}
-                    className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  >
-                    <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                      {ticket.name}
-                    </Table.Cell>
-                    <Table.Cell className="font-medium text-gray-900 dark:text-white whitespace-normal">
-                      {ticket.email}
-                    </Table.Cell>
-                    <Table.Cell className="font-medium text-gray-900 dark:text-white whitespace-normal">
-                      {ticket.category}
-                    </Table.Cell>
-                    <Table.Cell className="font-medium text-gray-900 dark:text-white whitespace-normal">
-                      {ticket.subject}
-                    </Table.Cell>
-                    <Table.Cell className="message-column px-6 py-4 min-h-[100px] font-medium text-gray-900 dark:text-white whitespace-normal">
-                      {ticket.message}
-                    </Table.Cell>
-                    <Table.Cell className="message-column px-6 py-4 min-h-[100px] font-medium text-gray-900 dark:text-white whitespace-normal">
-                    {ticket.replies[0]?.message}
-                    </Table.Cell>
-                    <Table.Cell className="message-column px-6 py-4 min-h-[100px] font-medium text-gray-900 dark:text-white whitespace-normal">
-                      {ticket.state}
-                    </Table.Cell>
+        <div className="flex items-center justify-center h-screen p-4">
+  <div className=" max-w-7xl w-full relative shadow-lg sm:rounded-lg bg-white dark:bg-gray-800">
+    <Table
+      striped
+      hoverable={true}
+      className="w-full text-sm text-gray-700 dark:text-gray-400 z-0 "
+    >
+      <Table.Head className="text-xs uppercase bg-gray-100 dark:bg-gray-700">
+        <Table.HeadCell>Name</Table.HeadCell>
+        <Table.HeadCell>Email</Table.HeadCell>
+        <Table.HeadCell>Category</Table.HeadCell>
+        <Table.HeadCell>Subject</Table.HeadCell>
+        <Table.HeadCell>Message</Table.HeadCell>
+        <Table.HeadCell>Reply</Table.HeadCell>
+        <Table.HeadCell>Status</Table.HeadCell>
+        <Table.HeadCell>Actions</Table.HeadCell>
+      </Table.Head>
+      <Table.Body className="divide-y divide-gray-200 dark:divide-gray-700">
+        {tickets.map((ticket, index) => (
+          <Table.Row
+            key={index}
+            className="hover:bg-gray-50 dark:hover:bg-gray-600"
+          >
+            <Table.Cell className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+              {ticket.name}
+            </Table.Cell>
+            <Table.Cell className="px-6 py-4 text-gray-900 dark:text-white">
+              {ticket.email}
+            </Table.Cell>
+            <Table.Cell className="px-6 py-4 text-gray-900 dark:text-white">
+              {ticket.category}
+            </Table.Cell>
+            <Table.Cell className="px-6 py-4 text-gray-900 dark:text-white">
+              {ticket.subject}
+            </Table.Cell>
+            <Table.Cell className="px-6 py-4 text-gray-900 dark:text-white">
+              {ticket.message}
+            </Table.Cell>
+            <Table.Cell className="px-6 py-4 text-gray-900 dark:text-white">
+              {ticket.replies[0]?.message}
+            </Table.Cell>
+            <Table.Cell className="px-6 py-4 text-gray-900 dark:text-white">
+              {ticket.state}
+            </Table.Cell>
+            <Table.Cell>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => handleReply(ticket)}
+                  className="bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Reply
+                </button>
+                <button
+                  onClick={() => handleRemove(ticket._id)}
+                  className="bg-red-700 hover:bg-red-800 text-white font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+                >
+                  Reject
+                </button>
+                <button
+                  onClick={() => handleResolve(ticket._id)}
+                  disabled={ticket.state === 'resolved'}
+                  className={`text-white font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-4 ${
+                    ticket.state === 'resolved'
+                      ? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed focus:ring-gray-300'
+                      : 'bg-green-700 hover:bg-green-800 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800'
+                  }`}
+                >
+                  Resolve
+                </button>
+              </div>
+            </Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  </div>
+</div>
 
-                    <Table.Cell>
-                      <div className="flex">
-                        <button
-                          onClick={() => handleReply(ticket)}
-                          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                        >
-                          Reply
-                        </button>
-                        <button
-                          onClick={() => handleRemove(ticket._id)}
-                          className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                        >
-                          Reject
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleResolve(ticket._id)
-                          }
-                          disabled={ticket.state === 'resolved'}
-                          className={`focus:outline-none text-white ${ticket.state === 'resolved' ? 'bg-gray-500 hover:bg-gray-500 cursor-not-allowed' : 'bg-green-700 hover:bg-green-800'} focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800`}
-                        >
-                          Resolve
-                        </button>
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-          </div>
-        </div>
       )}
     </>
   );
