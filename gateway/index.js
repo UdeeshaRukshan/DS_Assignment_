@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const httpProxy = require('http-proxy');
 const dotenv = require('dotenv');
+const stripe = require('stripe')('pk_test_51PCn3w02viTsel8JLSMqJtAXz3N83i2SgnxOM5Fh0JO6Zj5EJ8qkdg729HjDV9Zu7OidTK6z2BelQtYPDC62RLFK00Y2BBI6gO');
 
 const app = express();
 const proxy = httpProxy.createProxyServer();
@@ -41,7 +42,22 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
 });
-
-const port = process.env.PORT || 8074;
+app.post('/api/payment', async (req, res) => {
+    try {
+      const { token } = req.body;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: 1000, // Amount in cents
+        currency: 'usd',
+        payment_method: token,
+        confirmation_method: 'manual',
+        confirm: true,
+      });
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, error: 'Error processing payment.' });
+    }
+  });
+const port = process.env.PORT || 8070;
 
 app.listen(port, () => console.log(`Gateway up and running on port ${port}!`));
