@@ -13,7 +13,7 @@ const cors = require('cors');
 
 app.use(cors({
     origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
     credentials: true,
 }));
 app.use(bodyParser.json());
@@ -23,6 +23,8 @@ app.use(cookieParser());
 const adminRoutes = ['/api/admin', '/api/admin/*'];
 const instructorRoutes = ['/api/instructor', '/api/instructor/*'];
 const learnerRoutes = ['/api/learner', '/api/learner/*'];
+const SupportRoutes = ['/api/support', '/api/support/*'];
+
 
 app.use((req, res, next) => {
     const { path } = req;
@@ -33,6 +35,9 @@ app.use((req, res, next) => {
         proxy.web(req, res, { target: 'http://localhost:8072' });
     } else if (learnerRoutes.some(route => path.startsWith(route))) {
         proxy.web(req, res, { target: 'http://localhost:8073' });
+    }
+    else if (learnerRoutes.some(route => path.startsWith(route))) {
+        proxy.web(req, res, { target: 'http://localhost:8074' });
     } else {
         res.status(404).send('Not Found');
     }
