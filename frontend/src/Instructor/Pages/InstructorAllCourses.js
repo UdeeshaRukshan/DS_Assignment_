@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Spin, Alert, Modal, Button, Form, Input, Upload, message, Radio } from 'antd';
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CiSearch } from 'react-icons/ci'; // Import the CiSearch icon
 import axios from 'axios';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
@@ -9,6 +10,7 @@ import ReactPlayer from 'react-player';
 
 const GetAllCoursesByInstructorId = () => {
     const [courses, setCourses] = useState([]);
+    const [filteredCourses, setFilteredCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -17,6 +19,7 @@ const GetAllCoursesByInstructorId = () => {
     const [form] = Form.useForm();
     const [fileUpload, setFileUpload] = useState(null);
     const [fileUrl, setFileUrl] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const uploadFile = async () => {
         if (!fileUpload) return Promise.reject("No file to upload");
@@ -46,6 +49,14 @@ const GetAllCoursesByInstructorId = () => {
 
         fetchCourses();
     }, []);
+
+    useEffect(() => {
+        // Filter courses based on search term
+        const filtered = courses.filter(course =>
+            course.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredCourses(filtered);
+    }, [searchTerm, courses]);
 
     const handleViewDetails = async (courseId) => {
         setSelectedCourseId(courseId);
@@ -112,8 +123,17 @@ const GetAllCoursesByInstructorId = () => {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: '10px' }}>
             <h1 style={{ marginBottom: '20px', fontSize: '24px' }}>All Courses</h1>
+            <div className="input-group rounded" style={{backgroundColor: '#9FA6B2'}}>
+                <Input
+                    placeholder="Search Course by Title"
+                    style={{ marginBottom: '5px', marginTop:'5px',marginLeft:'5px', width: '300px',backgroundColor: '#CCFFFF', borderRadius: '5px'}}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}     
+                />
+                <CiSearch style={{ marginLeft: '5px', marginRight: '5px', marginTop:'10px', marginBottom: '10px', fontSize: '25px', color: '#CCFFFF' }} />
+            </div>
             {loading ? (
                 <div style={{ textAlign: 'center' }}>
                     <Spin size="large" />
@@ -122,7 +142,7 @@ const GetAllCoursesByInstructorId = () => {
                 <Alert message={error} type="error" />
             ) : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {courses.map(course => (
+                    {filteredCourses.map(course => (
                         <Card
                             key={course._id}
                             title={course.title}

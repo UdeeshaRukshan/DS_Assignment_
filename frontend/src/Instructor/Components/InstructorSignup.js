@@ -37,7 +37,7 @@ const InstructorSignup = () => {
 
     return (
         <Container>
-            <Row justify="center" style={{ marginTop: '50px' }}>
+            <Row justify="center" style={{ marginTop: '40px', marginBottom:'10px' }}>
                 <Col xs={24} sm={20} md={16} lg={12} xl={10}>
                     <Card title="Instructor Signup" style={{ borderRadius: '15px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
                         <Form

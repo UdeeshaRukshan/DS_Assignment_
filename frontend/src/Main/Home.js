@@ -31,17 +31,17 @@ export default function Home() {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto" style={{ marginRight: "20px" }}>
+            <Nav className="ml-auto" style={{ marginRight: "5%" }}>
               <Nav.Link
                 href="/login"
-                className="text-light"
+                className="text-light text-decoration-none hover-green"
                 style={{ marginLeft: "40%" }}
               >
                 Login
               </Nav.Link>
               <Nav.Link
                 href="/signup"
-                className="text-light"
+                className="text-light text-decoration-none"
               >
                 Signup
               </Nav.Link>
@@ -75,6 +75,29 @@ export default function Home() {
           </Col>
         </Row>
       </Container>
+        <section>
+          <footer className="text-center text-white" style={{ backgroundColor: "#0a4275" }}>
+            <div className="container p-4 pb-0">
+              <section>
+                <p className="d-flex justify-content-center align-items-center">
+                  <span className="me-3">Register for free</span>
+                  <button type="button" className="btn btn-outline-light btn-rounded">
+                  <Nav.Link
+                href="/signup"
+                className="text-green text-decoration-none"
+              >
+                Signup
+              </Nav.Link>
+                  </button>
+                </p>
+              </section>
+            </div>
+            <div className="text-center p-3" style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}>
+              © 2024 Copyright :
+              <a className="text-white" href="#"> SkillHub.education</a>
+            </div>
+          </footer>
+        </section>
     </>
   );
 }
