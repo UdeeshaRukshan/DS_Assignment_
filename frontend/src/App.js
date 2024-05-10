@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import PaymentComponent from './components/payment/payment';
 import SubmitTicketForm from './components/support/submitTicket/submitTicketForm.js';
-import { MyTickets } from './components/support/myTicket/myTicket.js';
+// import { MyTickets } from './components/support/myTicket/myTicket.js';
 import HoverRating from './components/feedback/muiFeedback.js'
 import CheckoutForm from './components/payment/checkoutForm.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,7 +21,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/submit" element={<SubmitTicketForm />} />
-          <Route path="/mytickets" element={<MyTickets />} />
+          {/* <Route path="/mytickets" element={<MyTickets />} /> */}
           <Route path="/payment" element={<PaymentComponent />} />
           <Route path="/emoji" element={<HoverRating/>} />  
           <Route path="/checkout" element={<CheckoutForm/>} />

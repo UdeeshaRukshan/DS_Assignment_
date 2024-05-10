@@ -63,6 +63,6 @@ app.use((err, req, res, next) => {
 //       res.status(500).json({ success: false, error: 'Error processing payment.' });
 //     }
 //   });
-const port = process.env.PORT || 8070;
+const port = process.env.PORT || 8075;
 
 app.listen(port, () => console.log(`Gateway up and running on port ${port}!`));

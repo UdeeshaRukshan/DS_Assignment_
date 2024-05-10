@@ -12,7 +12,7 @@ import AdminAllCourses from "../Components/AdminAllCourses";
 import AdminCoursesReq from "../Components/AdminCoursesReq";
 import AdminProfile from "../Components/AdminProfile";
 import AdminAllStudents from "../Components/AdminAllStudents";
-
+import {MyTickets} from "../Components/myTicket/myTicket.js";
 const { Header, Sider, Content } = Layout;
 
 const AdminHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
@@ -50,10 +50,13 @@ const AdminHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
                     All Students
                 </Menu.Item>
                 <Menu.Item key="4" icon={<UserOutlined />}>
+                    Support Mangement
+                </Menu.Item>
+                <Menu.Item key="5" icon={<UserOutlined />}>
                     Profile
                 </Menu.Item>
                 <hr style={{marginTop:'30px', color:'white'}} />
-                <Menu.Item key="5" style={{marginTop:'30px'}} icon={<LogoutOutlined style={{color:"orangered"}} />} onClick={handleLogout}>
+                <Menu.Item key="6" style={{marginTop:'30px'}} icon={<LogoutOutlined style={{color:"orangered"}} />} onClick={handleLogout}>
                     Logout
                 </Menu.Item>
             </Menu>
@@ -93,7 +96,9 @@ const App = () => {
                     {selectedMenuItem === '1' && <AdminCoursesReq />}
                     {selectedMenuItem === '2' && <AdminAllCourses />}
                     {selectedMenuItem === '3' && <AdminAllStudents />}
-                    {selectedMenuItem === '4' && <AdminProfile />}
+                    {selectedMenuItem === '4' && <MyTickets/>}
+                    {selectedMenuItem === '5' && <AdminProfile />}
+                    {selectedMenuItem === '6' && <AdminProfile />}
                 </Content>
             </Layout>
         </Layout>

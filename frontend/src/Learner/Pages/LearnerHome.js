@@ -1,31 +1,31 @@
-import React, {useState} from 'react';
-import {Layout, Menu, message} from 'antd';
+import React, { useState } from "react";
+import { Layout, Menu, message } from "antd";
 import {
-    BellOutlined,
-    BookOutlined,
-    HomeOutlined,
-    LogoutOutlined,
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
-import {useNavigate} from "react-router-dom";
+  BellOutlined,
+  BookOutlined,
+  HomeOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import LearnerProfile from "../Components/LearnerProfile";
 import LearnerMyCourses from "../Components/LearnerMyCourses";
 import LearnerAllCourses from "../Components/LearnerAllCourses";
 import LearnerTickets from '../Components/LearnerTickets';
 
-const {Header, Sider, Content} = Layout;
+const { Header, Sider, Content } = Layout;
 
-const LearnerHome = ({collapsed, onCollapse, onSelectMenuItem}) => {
-    const navigate = useNavigate();
+const LearnerHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
+  const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('learnerId');
-        message.success('Logged out successfully');
-        navigate('/login');
-    };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("learnerId");
+    message.success("Logged out successfully");
+    navigate("/login");
+  };
 
     return (
         <Sider
@@ -55,7 +55,7 @@ const LearnerHome = ({collapsed, onCollapse, onSelectMenuItem}) => {
                     My tickets
                 </Menu.Item>
                 <hr style={{marginTop: '30px', color: 'white'}}/>
-                <Menu.Item key="4" style={{marginTop: '30px'}} icon={<LogoutOutlined style={{color: "orangered"}}/>}
+                <Menu.Item key="5" style={{marginTop: '30px'}} icon={<LogoutOutlined style={{color: "orangered"}}/>}
                            onClick={handleLogout}>
                     Logout
                 </Menu.Item>
@@ -65,32 +65,39 @@ const LearnerHome = ({collapsed, onCollapse, onSelectMenuItem}) => {
 };
 
 const App = () => {
-    const [collapsed, setCollapsed] = useState(false);
-    const [selectedMenuItem, setSelectedMenuItem] = useState('1');
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState("1");
 
-    const handleSelectMenuItem = ({item, key}) => {
-        setSelectedMenuItem(key);
-    };
+  const handleSelectMenuItem = ({ item, key }) => {
+    setSelectedMenuItem(key);
+  };
 
-    return (
-        <Layout style={{minHeight: '100vh'}}>
-            <LearnerHome
-                collapsed={collapsed}
-                onSelectMenuItem={handleSelectMenuItem}
-            />
-            <Layout>
-                <Header style={{ padding: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <button
-                        type="button"
-                        onClick={() => setCollapsed(!collapsed)}
-                        style={{
-                            fontSize: '16px',
-                            width: 64,
-                            height: 64,
-                        }}
-                    >
-                        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                    </button>
+  return (
+    <Layout style={{ minHeight: "100vh" }}>
+      <LearnerHome
+        collapsed={collapsed}
+        onSelectMenuItem={handleSelectMenuItem}
+      />
+      <Layout>
+        <Header
+          style={{
+            padding: 0,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              fontSize: "16px",
+              width: 64,
+              height: 64,
+            }}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </button>
 
                     <button
                         style={{
