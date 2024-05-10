@@ -8,9 +8,8 @@ import EmojiFeedback from './components/feedback/emojiFeedback.js';
 import HoverRating from './components/feedback/muiFeedback.js'
 import styled from "styled-components";
 import CheckoutForm from './components/payment/checkoutForm.js';
-export default App;import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Main/Login";
 import InstructorHome from "./Instructor/Pages/InstructorHome";
 import LearnerHome from "./Learner/Pages/LearnerHome";

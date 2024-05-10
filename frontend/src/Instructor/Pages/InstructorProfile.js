@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Form, Input, message } from 'antd'; // Import Input from antd
+import { Button, Card, Form, Input, message } from 'antd';
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const InstructorProfile = () => {
     const fetchInstructorProfile = async () => {
         try {
             const instructorId = localStorage.getItem('instructorId');
-            const response = await fetch(`http://localhost:8070/api/instructor/${instructorId}/profile`, {
+            const response = await fetch(`http://localhost:8072/api/instructor/${instructorId}/profile`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -42,7 +42,7 @@ const InstructorProfile = () => {
         setLoading(true);
         try {
             const instructorId = localStorage.getItem('instructorId');
-            const response = await fetch(`http://localhost:8070/api/instructor/${instructorId}/profile`, {
+            const response = await fetch(`http://localhost:8072/api/instructor/${instructorId}/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

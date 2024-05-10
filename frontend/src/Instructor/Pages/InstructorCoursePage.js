@@ -13,7 +13,7 @@ const InstructorCoursePage = () => {
 
     const fetchCourseDetails = async () => {
         try {
-            const response = await axios.get(`http://localhost:8070/api/instructor/course/${courseId}`);
+            const response = await axios.get(`http://localhost:8072/api/instructor/course/${courseId}`);
             setCourse(response.data);
             setLoading(false);
         } catch (error) {
@@ -34,7 +34,7 @@ const InstructorCoursePage = () => {
             formData.append('title', values.title);
             formData.append('file', values.file[0]);
 
-            const response = await axios.post(`http://localhost:8070/api/instructor/course/${courseId}/content`, formData, {
+            const response = await axios.post(`http://localhost:8072/api/instructor/course/${courseId}/content`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`

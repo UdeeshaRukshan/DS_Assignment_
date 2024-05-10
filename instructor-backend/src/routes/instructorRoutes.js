@@ -13,6 +13,8 @@ router.post('/courses', auth.authenticate, instructorController.addNewCourse);
 router.get('/:instructorId/courses', instructorController.getAllCoursesByInstructorId);
 router.get('/course/:courseId', instructorController.getCourseById);
 router.post('/course/:courseId/content', instructorController.addCourseContent);
+router.put('/course/:courseId', instructorController.updateCourse);
+router.delete('/course/:courseId', instructorController.deleteCourse);
 
 router.get('/courses', instructorController.getAllCourses);
 router.put('/course/:courseId/status', instructorController.updateCourseStatus);

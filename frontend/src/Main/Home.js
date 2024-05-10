@@ -35,14 +35,13 @@ export default function Home() {
               <Nav.Link
                 href="/login"
                 className="text-light"
-                style={{ marginLeft: "1200px" }}
+                style={{ marginLeft: "40%" }}
               >
                 Login
               </Nav.Link>
               <Nav.Link
                 href="/signup"
                 className="text-light"
-                style={{ marginLeft: "10px" }}
               >
                 Signup
               </Nav.Link>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Spin, Alert, Modal, Button, Form, Input, Upload, message, Radio } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
@@ -35,7 +35,7 @@ const GetAllCoursesByInstructorId = () => {
 
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(`http://localhost:8070/api/instructor/${instructorId}/courses`);
+                const response = await axios.get(`http://localhost:8072/api/instructor/${instructorId}/courses`);
                 setCourses(response.data);
                 setLoading(false);
             } catch (error) {
@@ -51,7 +51,7 @@ const GetAllCoursesByInstructorId = () => {
         setSelectedCourseId(courseId);
         setModalVisible(true);
         try {
-            const response = await axios.get(`http://localhost:8070/api/instructor/course/${courseId}`);
+            const response = await axios.get(`http://localhost:8072/api/instructor/course/${courseId}`);
             setCourse(response.data);
         } catch (error) {
             setError(error.response?.data?.message || 'Failed to fetch course details');
@@ -74,7 +74,7 @@ const GetAllCoursesByInstructorId = () => {
             };
 
             console.log("Form Data: ", data);
-            const response = await axios.post(`http://localhost:8070/api/instructor/course/${selectedCourseId}/content`, data, {
+            const response = await axios.post(`http://localhost:8072/api/instructor/course/${selectedCourseId}/content`, data, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
@@ -88,6 +88,26 @@ const GetAllCoursesByInstructorId = () => {
             setLoading(false);
             console.error('Error:', error.message);
             message.error('Failed to add content. Please try again.');
+        }
+    };
+
+    const handleDeleteCourse = async () => {
+        try {
+            await axios.delete(`http://localhost:8072/api/instructor/course/${selectedCourseId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+            });
+
+            message.success('Course deleted successfully!');
+            setModalVisible(false);
+            // Refresh courses
+            const instructorId = localStorage.getItem('instructorId');
+            const response = await axios.get(`http://localhost:8072/api/instructor/${instructorId}/courses`);
+            setCourses(response.data);
+        } catch (error) {
+            console.error('Error:', error.message);
+            message.error('Failed to delete course. Please try again.');
         }
     };
 
@@ -130,7 +150,10 @@ const GetAllCoursesByInstructorId = () => {
                 title="Course Details"
                 visible={modalVisible}
                 onCancel={handleModalClose}
-                footer={null}
+                footer={[
+                    <div className="btn btn-danger ml-3" key="delete" type="danger" onClick={handleDeleteCourse}><DeleteOutlined /></div>,
+                    <div className="btn btn-warning mx=3" key="cancel" onClick={handleModalClose}>Cancel</div>
+                ]}
                 width="80%"
                 destroyOnClose
                 style={{ borderRadius: '20px' }}
@@ -140,7 +163,7 @@ const GetAllCoursesByInstructorId = () => {
                     <div style={{ overflowY: 'auto' }}>
                         <Card
                             title={course.title}
-                            style={{ width: '100%', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }} // Added border radius and shadow to card
+                            style={{ width: '100%', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}
                         >
                             <p><strong>Description:</strong> {course.description}</p>
                             <p><strong>Requirements:</strong> {course.requirements}</p>

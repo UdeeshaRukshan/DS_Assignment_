@@ -209,3 +209,38 @@ exports.updateCourseStatus = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+exports.updateCourse = async (req, res) => {
+    try {
+        const courseId = req.params.courseId;
+        const updateData = req.body;
+
+        const updatedCourse = await Course.findByIdAndUpdate(courseId, updateData, { new: true });
+
+        if (!updatedCourse) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        res.status(200).json(updatedCourse);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.deleteCourse = async (req, res) => {
+    try {
+        const courseId = req.params.courseId;
+
+        const deletedCourse = await Course.findByIdAndDelete(courseId);
+
+        if (!deletedCourse) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        res.status(200).json({ message: 'Course deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
