@@ -1,11 +1,10 @@
-import { useState } from 'react';
+
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import PaymentComponent from './components/payment/payment';
 import SubmitTicketForm from './components/support/submitTicket/submitTicketForm.js';
 import { MyTickets } from './components/support/myTicket/myTicket.js';
 import HoverRating from './components/feedback/muiFeedback.js'
-import styled from "styled-components";
 import CheckoutForm from './components/payment/checkoutForm.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -16,15 +15,7 @@ import AdminHome from "./Admin/Pages/AdminHome";
 import Signup from "./Main/Signup";
 import Home from "./Main/Home";
 
-const AppStyles = styled.div`
- display: flex;
- align-items: center;
- justify-content: center;
- height: 100vh;
- background-color: #f8ebe2;
-`;
 function App() {
-  const [activeReaction, setActiveReaction] = useState("");
   return (
     <div className="App">
       <Router>
@@ -37,11 +28,8 @@ function App() {
           <Route path="/" element={<Home />} />
          <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-
         <Route path="/instructor/home" element={<InstructorHome />} />
-
         <Route path="/learner/home" element={<LearnerHome />} />
-
         <Route path="/admin/home" element={<AdminHome />} />
             
         </Routes>
