@@ -1,12 +1,11 @@
 "use client";
 import axios from "axios";
 import { useState, useEffect } from "react";
-// import { Table } from "flowbite-react";
 import "../../../index.css";
 import { use } from "react";
 import {Button,Table } from 'react-bootstrap';
 
-export default function MyTickets() {
+export function MyTickets() {
   const [tickets, setTickets] = useState([]);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [replyToEmail, setReplyToEmail] = useState("");
@@ -104,6 +103,80 @@ export default function MyTickets() {
       console.error("Error:", error);
     }
   };
+  const styles = {
+    flexContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        padding: '16px'
+    },
+    mainContainer: {
+        maxWidth: '1120px',
+        width: '100%',
+        position: 'relative',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+        backgroundColor: '#ffffff',
+    },
+    darkMainContainer: {
+        backgroundColor: '#2d3748'
+    },
+    table: {
+        width: '100%',
+        textAlign: 'left',
+        color: '#4a5568'
+    },
+    darkTable: {
+        color: '#cbd5e0'
+    },
+    thead: {
+        backgroundColor: '#f7fafc',
+        color: '#4a5568',
+        textTransform: 'uppercase'
+    },
+    darkThead: {
+        backgroundColor: '#4a5568'
+    },
+    tbodyTrHover: {
+        backgroundColor: '#f7fafc'
+    },
+    darkTbodyTrHover: {
+        backgroundColor: '#718096'
+    },
+    button: {
+        padding: '8px 16px',
+        border: 'none',
+        borderRadius: '4px',
+        fontSize: '14px',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s'
+    },
+    buttonPrimary: {
+        backgroundColor: '#3182ce',
+        color: '#ffffff'
+    },
+    buttonPrimaryHover: {
+        backgroundColor: '#63b3ed'
+    },
+    buttonDanger: {
+        backgroundColor: '#e53e3e',
+        color: '#ffffff'
+    },
+    buttonDangerHover: {
+        backgroundColor: '#fc8181'
+    },
+    buttonSuccess: {
+        backgroundColor: '#38a169',
+        color: '#ffffff'
+    },
+    buttonSuccessHover: {
+        backgroundColor: '#68d391'
+    },
+    buttonDisabled: {
+        backgroundColor: '#cbd5e0',
+        color: '#ffffff',
+        cursor: 'not-allowed'
+    }
+};
 
   return (
     <>
@@ -203,10 +276,10 @@ export default function MyTickets() {
           </div>
         </div>
       ) : (
-        <div className="flex items-center justify-center h-screen p-4">
-          <div className="max-w-7xl w-full relative shadow-lg sm:rounded-lg bg-white dark:bg-gray-800">
-            <Table striped hover responsive="sm" className="w-full text-sm text-gray-700 dark:text-gray-400">
-              <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700">
+        <div className={styles.flexContainer}>
+          <div className={{...styles.mainContainer, ...(styles.darkMainContainer)}}>
+            <Table striped hover responsive="sm" className={{...styles.table, ...( styles.darkTable)}}>
+              <thead className={{...styles.thead, ...( styles.darkThead)}}>
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
@@ -221,16 +294,16 @@ export default function MyTickets() {
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {tickets.map((ticket, index) => (
                   <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{ticket.name}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{ticket.email}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{ticket.category}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{ticket.subject}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{ticket.message}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{ticket.replies[0]?.message}</td>
-                    <td className="px-6 py-4 text-gray-900 dark:text-white">{ticket.state}</td>
+                    <td className="px-6 py-4 font-semibold  text-gray-900 dark:text-white whitespace-nowrap">{ticket.name}</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{ticket.email}</td>
+                    <td className="px-6 py-4 font-semibold  text-gray-900 dark:text-white">{ticket.category}</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{ticket.subject}</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{ticket.message}</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{ticket.replies[0]?.message}</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{ticket.state}</td>
                     <td>
                       <div className="flex space-x-2">
-                        <Button variant="primary" onClick={() => handleReply(ticket)}>Reply</Button>
+                        <Button className={`${styles.buttonPrimary} ${styles.buttonPrimaryHover}`} onClick={() => handleReply(ticket)}>Reply</Button>
                         <Button variant="danger" onClick={() => handleRemove(ticket._id)}>Reject</Button>
                         <Button
                           variant="success"
