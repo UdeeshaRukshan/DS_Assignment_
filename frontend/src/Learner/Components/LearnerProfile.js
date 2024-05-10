@@ -13,7 +13,7 @@ const LearnerProfile = () => {
 
     const fetchLearnerProfile = async () => {
         try {
-            const response = await fetch('http://localhost:8070/api/learner/profile', {
+            const response = await fetch('http://localhost:8073/api/learner/profile', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -35,7 +35,7 @@ const LearnerProfile = () => {
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8070/api/learner/profile', {
+            const response = await fetch('http://localhost:8073/api/learner/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
