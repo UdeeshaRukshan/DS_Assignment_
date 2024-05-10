@@ -20,28 +20,24 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
 
-const learnerServiceUrl = 'http://localhost:8073';
-const instructorServiceUrl = 'http://localhost:8072';
-const adminServiceUrl = 'http://localhost:8071';
-const supportServiceUrl = 'http://localhost:8074';
+const adminRoutes = ['/api/admin', '/api/admin/*'];
+const instructorRoutes = ['/api/instructor', '/api/instructor/*'];
+const learnerRoutes = ['/api/learner', '/api/learner/*'];
 
-// Route requests based on path
-app.use('/api/learner', (req, res) => {
-    proxy.web(req, res, { target: learnerServiceUrl });
+app.use((req, res, next) => {
+    const { path } = req;
+
+    if (adminRoutes.some(route => path.startsWith(route))) {
+        proxy.web(req, res, { target: 'http://localhost:8071' });
+    } else if (instructorRoutes.some(route => path.startsWith(route))) {
+        proxy.web(req, res, { target: 'http://localhost:8072' });
+    } else if (learnerRoutes.some(route => path.startsWith(route))) {
+        proxy.web(req, res, { target: 'http://localhost:8073' });
+    } else {
+        res.status(404).send('Not Found');
+    }
 });
 
-app.use('/api/instructor', (req, res) => {
-    proxy.web(req, res, { target: instructorServiceUrl });
-});
-
-app.use('/api/admin', (req, res) => {
-    proxy.web(req, res, { target: adminServiceUrl });
-});
-app.use('/support', (req, res) => {
-    proxy.web(req, res, { target: supportServiceUrl });
-});
-
-// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
