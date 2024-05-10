@@ -13,6 +13,7 @@ import {useNavigate} from "react-router-dom";
 import LearnerProfile from "../Components/LearnerProfile";
 import LearnerMyCourses from "../Components/LearnerMyCourses";
 import LearnerAllCourses from "../Components/LearnerAllCourses";
+import LearnerTickets from '../Components/LearnerTickets';
 
 const {Header, Sider, Content} = Layout;
 
@@ -49,6 +50,9 @@ const LearnerHome = ({collapsed, onCollapse, onSelectMenuItem}) => {
                 </Menu.Item>
                 <Menu.Item key="3" icon={<UserOutlined/>}>
                     Profile
+                </Menu.Item>
+                <Menu.Item key="4" icon={<BookOutlined/>}>
+                    My tickets
                 </Menu.Item>
                 <hr style={{marginTop: '30px', color: 'white'}}/>
                 <Menu.Item key="4" style={{marginTop: '30px'}} icon={<LogoutOutlined style={{color: "orangered"}}/>}
@@ -103,6 +107,7 @@ const App = () => {
                     {selectedMenuItem === '1' && <LearnerMyCourses/>}
                     {selectedMenuItem === '2' && <LearnerAllCourses/>}
                     {selectedMenuItem === '3' && <LearnerProfile/>}
+                    {selectedMenuItem === '4' && <LearnerTickets/>}
                 </Content>
             </Layout>
         </Layout>
