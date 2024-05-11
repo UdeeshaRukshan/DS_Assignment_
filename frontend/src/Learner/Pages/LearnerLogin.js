@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, message } from "antd";
+import {Form, Input, Button, message, Checkbox} from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const LearnerLogin = () => {
@@ -32,7 +32,7 @@ const LearnerLogin = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 fw-bold">
       <h2 className="mb-4">Learner Login</h2>
       <Form name="login-form" layout="vertical" onFinish={onFinish}>
         <Form.Item
@@ -52,8 +52,13 @@ const LearnerLogin = () => {
         >
           <Input.Password />
         </Form.Item>
+
+        <Form.Item name="remember" >
+          <Checkbox>Remember me</Checkbox>
+        </Form.Item>
+
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button className="btn btn-primary rounded-5 p-1 fw-bold" style={{width:'150px'}} type="primary" htmlType="submit" loading={loading}>
             Login
           </Button>
         </Form.Item>

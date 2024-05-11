@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const Learner = require("../models/LearnerModel");
+const Cart = require("../models/CartModel");
 const {
   hashPassword,
   comparePassword,
@@ -226,6 +227,76 @@ exports.getEnrollmentByCourseIdAndLearnerId = async (req, res) => {
 
     console.log("Count" + progressCount);
     res.status(200).json({ enrollment, progressCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.addToCart = async (req, res) => {
+  try {
+    const { learnerId, courseId, title, description, price } = req.body;
+
+    let cart = await Cart.findOne({ learnerId });
+
+    if (!cart) {
+      cart = new Cart({
+        learnerId,
+        courses: [],
+        status: "pending"
+      });
+    }
+
+    const existingCourseIndex = cart.courses.findIndex(
+        course => course.courseId === courseId
+    );
+
+    if (existingCourseIndex !== -1) {
+      return res.status(400).json({ message: "Course is already in the cart" });
+    }
+
+    cart.courses.push({
+      courseId,
+      title,
+      description,
+      price
+    });
+
+    await cart.save();
+
+    res.status(200).json({ message: "Course added to cart successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.getAllCartContents = async (req, res) => {
+  try {
+    const { learnerId } = req.params;
+    const cartContents = await Cart.find({ learnerId });
+    res.status(200).json(cartContents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.removeCartContent = async (req, res) => {
+  try {
+    const { learnerId, courseId } = req.params;
+
+    const cart = await Cart.findOne({ learnerId });
+
+    console.log("Cart before removal:", cart);
+
+    cart.courses = cart.courses.filter(course => String(course.courseId) !== courseId);
+
+    await cart.save();
+
+    console.log("Cart after removal:", cart);
+
+    res.status(200).json({ message: "Course removed from cart successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
