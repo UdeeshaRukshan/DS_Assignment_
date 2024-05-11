@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import CourseDetails from '../courseDetails/courseDetails';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { ToastContainer, toast } from 'react-toastify';
+import { message} from "antd";
 import 'react-toastify/dist/ReactToastify.css';
 function CheckoutForm() {
 
@@ -13,7 +14,11 @@ function CheckoutForm() {
   });
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-
+  const learnerId = localStorage.getItem("learnerId");
+  const [cartContents, setCartContents] = useState([]);
+  
+  const [loading, setLoading] = useState(false);
+    const [totalPrice, setTotalPrice] = useState(0);
   const [showNotification, setShowNotification] = useState(false); // State to control notification visibility
 
   const [selectedItem, setSelectedItem] = useState({
@@ -25,7 +30,45 @@ function CheckoutForm() {
     setShowNotification(true); // Show notification when payment is processed
     setTimeout(() => setShowNotification(false), 3000); // Optionally hide after few seconds
   };
-  
+  useEffect(() => {
+    fetchCartContents();
+  },[])
+
+  useEffect(() => {
+    const total = cartContents.reduce((acc, cartItem) => acc + cartItem.price, 0);
+    setTotalPrice(total);
+}, [cartContents]);
+  const fetchCartContents = async () => {
+    setLoading(true);  // Start loading state
+    try {
+        const response = await fetch(
+            `http://localhost:8073/api/learner/cart/${learnerId}`,
+            {
+                method: "GET"
+            }
+        );
+
+        if (response.ok) {
+            const data = await response.json(); // Extract JSON from the response
+            // Useful place for a console log to debug or check data structure
+            console.log("Fetched cart contents:", data);
+
+            // Assuming data is an array of items where each item has a 'courses' array
+            const flattenedCourses = data.reduce((acc, cartItem) => {
+                return acc.concat(cartItem.courses); // Flatten all courses into a single array
+            }, []);
+            setCartContents(flattenedCourses); // Update state with the new cart contents
+        } else {
+            throw new Error('Failed to load the cart contents'); // Throw an error if response is not ok
+        }
+    } catch (error) {
+        console.error("Error fetching cart contents:", error);
+        message.error("An error occurred while fetching cart contents."); // Display error message to user
+    }
+    setLoading(false); // End loading state
+    
+};
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -101,18 +144,21 @@ function CheckoutForm() {
         </div>
         
         <div className="w-full lg:w-1/2 px-4">
-          <div className="border p-4 rounded mb-4 shadow">
-            <h3 className="text-lg font-semibold mb-2 text-gray-700">Selected Item</h3>
-            <p className="mb-2">{selectedItem.name}</p>
-            <p className="text-xl font-bold">${selectedItem.price.toFixed(2)}</p>
-          </div>
+        {
+        cartContents.map((course, index) => (
+          <div key={index} className="border p-4 rounded shadow mb-4">
+            <h3 className="text-lg font-semibold text-gray-700">{course.title}</h3>
+            <p>Description: {course.description}</p>
+            <p className="text-xl font-bold">${course.price.toFixed(2)}</p>
+          </div>))
+       }
+          
           
           <div className="border p-4 rounded shadow">
             <h3 className="text-lg font-semibold mb-2 text-gray-700">Total Price</h3>
-            <p className="text-xl font-bold">${selectedItem.price.toFixed(2)}</p>
+            <p className="text-xl font-bold">${totalPrice}</p>
           </div>
           <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline block w-full" type="submit" onClick={handlePayment}>Complete Purchase</button>
-          
         </div>
       </form>
       <ToastContainer />
