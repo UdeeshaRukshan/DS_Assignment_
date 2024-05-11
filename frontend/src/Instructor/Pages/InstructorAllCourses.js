@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Spin, Alert, Modal, Button, Form, Input, Upload, message, Radio } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CiSearch } from 'react-icons/ci'; // Import the CiSearch icon
 import axios from 'axios';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
@@ -9,6 +10,7 @@ import ReactPlayer from 'react-player';
 
 const GetAllCoursesByInstructorId = () => {
     const [courses, setCourses] = useState([]);
+    const [filteredCourses, setFilteredCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -17,6 +19,7 @@ const GetAllCoursesByInstructorId = () => {
     const [form] = Form.useForm();
     const [fileUpload, setFileUpload] = useState(null);
     const [fileUrl, setFileUrl] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const uploadFile = async () => {
         if (!fileUpload) return Promise.reject("No file to upload");
@@ -46,6 +49,14 @@ const GetAllCoursesByInstructorId = () => {
 
         fetchCourses();
     }, []);
+
+    useEffect(() => {
+        // Filter courses based on search term
+        const filtered = courses.filter(course =>
+            course.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredCourses(filtered);
+    }, [searchTerm, courses]);
 
     const handleViewDetails = async (courseId) => {
         setSelectedCourseId(courseId);
@@ -91,9 +102,38 @@ const GetAllCoursesByInstructorId = () => {
         }
     };
 
+    const handleDeleteCourse = async () => {
+        try {
+            await axios.delete(`http://localhost:8072/api/instructor/course/${selectedCourseId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+            });
+
+            message.success('Course deleted successfully!');
+            setModalVisible(false);
+            // Refresh courses
+            const instructorId = localStorage.getItem('instructorId');
+            const response = await axios.get(`http://localhost:8072/api/instructor/${instructorId}/courses`);
+            setCourses(response.data);
+        } catch (error) {
+            console.error('Error:', error.message);
+            message.error('Failed to delete course. Please try again.');
+        }
+    };
+
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: '10px' }}>
             <h1 style={{ marginBottom: '20px', fontSize: '24px' }}>All Courses</h1>
+            <div className="input-group rounded" style={{backgroundColor: '#9FA6B2'}}>
+                <Input
+                    placeholder="Search Course by Title"
+                    style={{ marginBottom: '5px', marginTop:'5px',marginLeft:'5px', width: '300px',backgroundColor: '#CCFFFF', borderRadius: '5px'}}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}     
+                />
+                <CiSearch style={{ marginLeft: '5px', marginRight: '5px', marginTop:'10px', marginBottom: '10px', fontSize: '25px', color: '#CCFFFF' }} />
+            </div>
             {loading ? (
                 <div style={{ textAlign: 'center' }}>
                     <Spin size="large" />
@@ -102,7 +142,7 @@ const GetAllCoursesByInstructorId = () => {
                 <Alert message={error} type="error" />
             ) : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {courses.map(course => (
+                    {filteredCourses.map(course => (
                         <Card
                             key={course._id}
                             title={course.title}
@@ -130,7 +170,10 @@ const GetAllCoursesByInstructorId = () => {
                 title="Course Details"
                 visible={modalVisible}
                 onCancel={handleModalClose}
-                footer={null}
+                footer={[
+                    <div className="btn btn-danger ml-3" key="delete" type="danger" onClick={handleDeleteCourse}><DeleteOutlined /></div>,
+                    <div className="btn btn-warning mx=3" key="cancel" onClick={handleModalClose}>Cancel</div>
+                ]}
                 width="80%"
                 destroyOnClose
                 style={{ borderRadius: '20px' }}
@@ -140,7 +183,7 @@ const GetAllCoursesByInstructorId = () => {
                     <div style={{ overflowY: 'auto' }}>
                         <Card
                             title={course.title}
-                            style={{ width: '100%', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }} // Added border radius and shadow to card
+                            style={{ width: '100%', borderRadius: '10px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}
                         >
                             <p><strong>Description:</strong> {course.description}</p>
                             <p><strong>Requirements:</strong> {course.requirements}</p>

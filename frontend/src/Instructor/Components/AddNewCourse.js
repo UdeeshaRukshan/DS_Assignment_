@@ -35,6 +35,7 @@ const AddNewCourse = () => {
 
             if (response.status === 201) {
                 message.success('Course added successfully');
+                navigate("/instructor/home/");
             } else {
                 message.error('Failed to add new course. Please try again.');
             }

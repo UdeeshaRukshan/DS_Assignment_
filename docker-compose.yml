@@ -1,0 +1,38 @@
+version: '3'
+services:
+  learner-backend:
+    build: ./learner-backend
+    ports:
+      - "8073:8073"
+    environment:
+      - MONGODB_URI=mongodb+srv://gevinnanayakkara:1234@skillhub.7vjvttx.mongodb.net/skillhub_learner?retryWrites=true&w=majority&appName=SkillHub
+    depends_on:
+      - mongodb
+  instructor-backend:
+    build: ./instructor-backend
+    ports:
+      - "8072:8072"
+    environment:
+      - MONGODB_URI=mongodb+srv://gevinnanayakkara:1234@skillhub.7vjvttx.mongodb.net/skillhub_instructor?retryWrites=true&w=majority&appName=SkillHub
+    depends_on:
+      - mongodb
+  admin-backend:
+    build: ./admin-backend
+    ports:
+      - "8071:8071"
+    environment:
+      - MONGODB_URI=mongodb+srv://gevinnanayakkara:1234@skillhub.7vjvttx.mongodb.net/skillhub_admin?retryWrites=true&w=majority&appName=SkillHub
+    depends_on:
+      - mongodb
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - learner-backend
+      - instructor-backend
+      - admin-backend
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
