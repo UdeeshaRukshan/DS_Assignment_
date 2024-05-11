@@ -27,17 +27,14 @@ mongoose
     .then(() => console.log('MongoDB successfully connected'))
     .catch(err => console.log(err));
 
-// Routes
-// app.use('/api/learner', learner);
-
 app.use('/api', tickerRouter);
-app.use('/api', paymentRouter);
+// app.use('/api', paymentRouter);
 
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
 });
 
-const port = process.env.PORT || 8073;
+const port = process.env.PORT || 8074;
 
 app.listen(port, () => console.log(`Server up and running on port ${port}!`));

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const Admin = require('../models/AdminModel');
 const { generateToken } = require('../middleware/auth');
-
+const axios=require('axios')
 exports.adminSignup = async (req, res) => {
     try {
         const existingAdmin = await Admin.findOne({ email: req.body.email });
