@@ -20,9 +20,6 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.3",
-    "nodemailer": "^6.9.13",
-    "nodemon": "^3.1.0",
-    "npm": "^10.7.0",
-    "start": "^5.1.0"
+    "nodemon": "^3.1.0"
   }
 }

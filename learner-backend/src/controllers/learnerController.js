@@ -88,12 +88,10 @@ exports.updateLearnerProfile = async (req, res) => {
       return res.status(404).json({ message: "Learner not found" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Learner profile updated successfully",
-        learner: updatedLearner,
-      });
+    res.status(200).json({
+      message: "Learner profile updated successfully",
+      learner: updatedLearner,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
