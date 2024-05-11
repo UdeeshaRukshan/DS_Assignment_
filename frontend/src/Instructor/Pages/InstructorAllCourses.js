@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Spin, Alert, Modal, Button, Form, Input, Upload, message, Radio } from 'antd';
 import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
-import { CiSearch } from 'react-icons/ci'; // Import the CiSearch icon
+import { CiSearch } from 'react-icons/ci';
 import axios from 'axios';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
@@ -20,6 +20,7 @@ const GetAllCoursesByInstructorId = () => {
     const [fileUpload, setFileUpload] = useState(null);
     const [fileUrl, setFileUrl] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [enrolldata, setEnrolldata] = useState([]);
 
     const uploadFile = async () => {
         if (!fileUpload) return Promise.reject("No file to upload");
@@ -51,7 +52,6 @@ const GetAllCoursesByInstructorId = () => {
     }, []);
 
     useEffect(() => {
-        // Filter courses based on search term
         const filtered = courses.filter(course =>
             course.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -112,7 +112,6 @@ const GetAllCoursesByInstructorId = () => {
 
             message.success('Course deleted successfully!');
             setModalVisible(false);
-            // Refresh courses
             const instructorId = localStorage.getItem('instructorId');
             const response = await axios.get(`http://localhost:8072/api/instructor/${instructorId}/courses`);
             setCourses(response.data);
@@ -121,6 +120,56 @@ const GetAllCoursesByInstructorId = () => {
             message.error('Failed to delete course. Please try again.');
         }
     };
+
+    const handleenrollment = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8073/api/learner/all-course-learners/663cb00d7103c1a0201496db`);
+            if (Array.isArray(response.data.students)) {
+                setEnrolldata(response.data.students);
+                console.log("Enrollment API response:", response.data.students);
+                message.info('Enrollment data fetched successfully!');
+            } else {
+                console.error('Error: API response is not an array');
+                message.error('Failed to fetch data. Please try again.');
+                setEnrolldata([]);
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+            message.error('Failed to fetch enrollment data. Please try again.');
+            setEnrolldata([]);
+        }
+    };
+    
+    
+    
+    const renderEnrollmentTable = () => {
+        return (
+            <div>
+                <h2>Enrolled Learners</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Description</th>
+                            <th>User Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {enrolldata.map((learner) => (
+                            <tr key={learner._id}>
+                                <td>{learner.name}</td>
+                                <td>{learner.email}</td>
+                                <td>{learner.description}</td>
+                                <td>{learner.userType}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
+    
 
     return (
         <div style={{ padding: '10px' }}>
@@ -172,6 +221,7 @@ const GetAllCoursesByInstructorId = () => {
                 onCancel={handleModalClose}
                 footer={[
                     <div className="btn btn-danger ml-3" key="delete" type="danger" onClick={handleDeleteCourse}><DeleteOutlined /></div>,
+                    <div className='btn mx=3' key="students" style={{backgroundColor: 'green'}} onClick={handleenrollment}>Enrolls</div>,
                     <div className="btn btn-warning mx=3" key="cancel" onClick={handleModalClose}>Cancel</div>
                 ]}
                 width="80%"
@@ -244,6 +294,8 @@ const GetAllCoursesByInstructorId = () => {
                         </Card>
                     </div>
                 )}
+                <br/>
+                {enrolldata && renderEnrollmentTable()}
             </Modal>
         </div>
     );

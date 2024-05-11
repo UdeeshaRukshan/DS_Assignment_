@@ -14,7 +14,7 @@ export default function AdminAllStudents() {
     const fetchAllStudents = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8070/api/admin/all-students', {
+            const response = await fetch('http://localhost:8071/api/admin/all-students', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -36,7 +36,7 @@ export default function AdminAllStudents() {
 
     const handleDelete = async (studentId) => {
         try {
-            const response = await fetch(`http://localhost:8070/api/admin/learner/${studentId}`, {
+            const response = await fetch(`http://localhost:8071/api/admin/learner/${studentId}`, {
                 method: 'DELETE'
             });
 

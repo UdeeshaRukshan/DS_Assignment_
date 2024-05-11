@@ -13,7 +13,7 @@ const AdminProfile = () => {
         const fetchAdminProfile = async () => {
             setLoading(true);
             try {
-                const response = await fetch('http://localhost:8070/api/admin/profile', {
+                const response = await fetch('http://localhost:8071/api/admin/profile', {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -37,7 +37,7 @@ const AdminProfile = () => {
     const handleUpdateProfile = async (formData) => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8070/api/admin/profile', {
+            const response = await fetch('http://localhost:8071/api/admin/profile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
