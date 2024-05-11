@@ -12,6 +12,7 @@ function CheckoutForm() {
     cvv: '',
   });
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
   const [showNotification, setShowNotification] = useState(false); // State to control notification visibility
 
@@ -32,7 +33,16 @@ function CheckoutForm() {
       [name]: value,
     });
   };
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full Name is required';
+    if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card Number is required';
+    if (!formData.expiryDate.trim()) newErrors.expiryDate = 'Expiry Date is required';
+    if (!formData.cvv.trim()) newErrors.cvv = 'CVV is required';
 
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   const handlePayment = () => {
     console.log("Processing payment", formData);
     toast.success("Payment is successful!", {
@@ -58,12 +68,16 @@ function CheckoutForm() {
       <CourseDetails />
       <form onSubmit={handleSubmit} className="flex flex-wrap -mx-4">
         <div className="w-full lg:w-1/2 px-4">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">Payment Details</h3>
-          <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Full Name" className="border p-2 mb-4 w-full rounded shadow-sm"/>
-          <input type="text" name="cardNumber" value={formData.cardNumber} onChange={handleChange} placeholder="Card Number" className="border p-2 mb-4 w-full rounded shadow-sm"/>
-          <input type="text" name="expiryDate" value={formData.expiryDate} onChange={handleChange} placeholder="Expiry Date (MM/YY)" className="border p-2 mb-4 w-full rounded shadow-sm"/>
-          <input type="text" name="cvv" value={formData.cvv} onChange={handleChange} placeholder="CVV" className="border p-2 mb-4 w-full rounded shadow-sm"/>
-          <div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
+        <h3 className="text-lg font-semibold mb-4 text-gray-700">Payment Details</h3>
+          <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Full Name" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.fullName ? 'border-red-500' : ''}`} />
+          {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
+          <input type="text" name="cardNumber" value={formData.cardNumber} onChange={handleChange} placeholder="Card Number" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.cardNumber ? 'border-red-500' : ''}`} />
+          {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
+          <input type="text" name="expiryDate" value={formData.expiryDate} onChange={handleChange} placeholder="Expiry Date (MM/YY)" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.expiryDate ? 'border-red-500' : ''}`} />
+          {errors.expiryDate && <p className="text-red-500 text-sm">{errors.expiryDate}</p>}
+          <input type="text" name="cvv" value={formData.cvv} onChange={handleChange} placeholder="CVV" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.cvv ? 'border-red-500' : ''}`} />
+          {errors.cvv && <p className="text-red-500 text-sm">{errors.cvv}</p>}<div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
+  
   <p className="font-semibold">30-Day Money-Back Guarantee</p>
   <p>Full Lifetime Access</p>
 
