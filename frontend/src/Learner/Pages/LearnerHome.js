@@ -11,7 +11,7 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import LearnerProfile from "../Components/LearnerProfile";
-import LearnerMyCourses from "../Components/LearnerMyCourses copy";
+import LearnerMyCourses from "../Components/LearnerMyCourses";
 import LearnerAllCourses from "../Components/LearnerAllCourses";
 import LearnerCart from "../Components/LearnerCart";
 import LearnerTickets from '../Components/LearnerTicket';
