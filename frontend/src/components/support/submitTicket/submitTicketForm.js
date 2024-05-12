@@ -5,74 +5,61 @@ import { message } from "antd";
 const SubmitTicketForm = () => {
   const storedLearnerId = localStorage.getItem("learnerId");
   const [learnerProfile, setLearnerProfile] = useState(null);
-
   const [formData, setFormData] = useState({
     name: "",
-    learnerId: storedLearnerId,
+    learnerId: storedLearnerId || "", // Ensure this defaults to empty string if not found
     email: "",
     category: "",
     subject: "",
     message: "",
   });
-  const name = learnerProfile?.name;
-  const email = learnerProfile?.email;
-  const fetchLearnerProfile = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:8073/api/learner/profile",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setLearnerProfile(data);
-        console.log("Learner Profile:", data);
-      } else {
-        message.error("Failed to fetch learner profile");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred. Please try again.");
-    }
-  };
-  useEffect(() => {
-    fetchLearnerProfile();
-  }, []);
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Learner ID from storage:", storedLearnerId); // Check what is being retrieved
-    setFormData((currentData) => ({
-      ...currentData,
-      name: learnerProfile?.name,
-      email: learnerProfile?.email,
-      learnerId: storedLearnerId,
-    }));
-  }, []);
+    const fetchLearnerProfile = async () => {
+      try {
+        const response = await fetch("http://localhost:8073/api/learner/profile", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setLearnerProfile(data);
+          console.log("Learner Profile:", data);
+          // Update form data here when profile data is available
+          setFormData(current => ({
+            ...current,
+            name: data.name,
+            email: data.email
+          }));
+        } else {
+          message.error("Failed to fetch learner profile");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        message.error("An error occurred. Please try again.");
+      }
+    };
+    fetchLearnerProfile();
+  }, []); // Empty dependency array to only run once on component mount
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Final submission data", formData); // Check the formData content just before axios call
+    console.log("Final submission data", formData); // Debug log
 
     try {
       const response = await axios.post(
         "http://localhost:8074/api/tickets",
         formData,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("Response from server:", response.data); // Process data received from backend
+      console.log("Response from server:", response.data); // Debug log
       navigate("/learner/home");
     } catch (error) {
       console.error("Error:", error);
@@ -96,7 +83,7 @@ const SubmitTicketForm = () => {
           <input
             type="text"
             name="name"
-            value={name}
+            value={learnerProfile?.name}
             onChange={handleChange}
             required
             readOnly
@@ -113,7 +100,7 @@ const SubmitTicketForm = () => {
           <input
             type="email"
             name="email"
-            value={email}
+            value={learnerProfile?.email}
             onChange={handleChange}
             required
             readOnly
@@ -176,7 +163,7 @@ const SubmitTicketForm = () => {
           type="submit"
           className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
         >
-          Submit Ticket
+          Submit A Ticket
         </button>
       </form>
     </div>
