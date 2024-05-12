@@ -285,12 +285,15 @@ exports.getAllCartContents = async (req, res) => {
 exports.removeCartContent = async (req, res) => {
   try {
     const { learnerId, courseId } = req.params;
-
     const cart = await Cart.findOne({ learnerId });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
 
     console.log("Cart before removal:", cart);
 
-    cart.courses = cart.courses.filter(course => String(course.courseId) !== courseId);
+    cart.courses = cart.courses.filter(course => String(course.courseId) !== String(courseId));
 
     await cart.save();
 
@@ -298,7 +301,7 @@ exports.removeCartContent = async (req, res) => {
 
     res.status(200).json({ message: "Course removed from cart successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error removing course from cart:', error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 };

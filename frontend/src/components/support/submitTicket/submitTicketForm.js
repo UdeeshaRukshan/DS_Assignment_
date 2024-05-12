@@ -125,7 +125,6 @@ const SubmitTicketForm = () => {
             <option value="Technical">Technical</option>
             <option value="Billing">Billing</option>
             <option value="General">General</option>
-            {/* Add more options as needed */}
           </select>
         </div>
         <div className="mb-6">
