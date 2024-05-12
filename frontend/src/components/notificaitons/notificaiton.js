@@ -14,7 +14,7 @@ function Notification(props) {
 
     return (
         <div>
-            <button onClick={notify}>button</button>
+            
             {/* ToastContainer must be rendered somewhere in the component tree */}
             <ToastContainer />
         </div>
