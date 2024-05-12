@@ -105,18 +105,22 @@ const App = () => {
               fontSize: "16px",
               width: 64,
               height: 64,
+              color: "white",
             }}
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </button>
 
-          <h4 style={{ color: "white", fontFamily:'cursive' }}>S k i l l H u b</h4>
+          <h4 style={{ color: "white", fontFamily: "cursive" }}>
+            S k i l l H u b
+          </h4>
 
           <button
             style={{
               fontSize: "16px",
               width: 64,
               height: 64,
+              color: "white",
             }}
             type="button"
           >
@@ -124,11 +128,11 @@ const App = () => {
           </button>
         </Header>
         <Content style={{ margin: "24px 16px", padding: 24, minHeight: 280 }}>
-          {selectedMenuItem === "1" && <LearnerMyCourses />}
-          {selectedMenuItem === "2" && <LearnerAllCourses />}
+          {selectedMenuItem === "1" && <LearnerAllCourses />}
+          {selectedMenuItem === "2" && <LearnerMyCourses />}
           {selectedMenuItem === "3" && <LearnerProfile />}
           {selectedMenuItem === "4" && <LearnerCart />}
-          {selectedMenuItem === '5' && <LearnerTickets/>}
+          {selectedMenuItem === "5" && <LearnerTickets />}
         </Content>
       </Layout>
     </Layout>
