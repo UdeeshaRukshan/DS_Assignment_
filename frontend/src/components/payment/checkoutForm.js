@@ -68,42 +68,109 @@ function CheckoutForm() {
     setLoading(false); // End loading state
     
 };
+const EnrollToCourse = async () => {
+  // Assume you're storing the token in localStorage or managing auth state elsewhere
+  const token = localStorage.getItem('token');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+  try {
+    const response = await fetch('http://localhost:8073/api/learner/enroll-course', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`  // Assuming Bearer token authentication
+      },
+      body: JSON.stringify({
+        learnerId: learnerId,
+        courseId: cartContents[0]._id, // Assuming you're enrolling in the first course in the cart
+      })
+      
     });
-  };
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.fullName.trim()) newErrors.fullName = 'Full Name is required';
-    if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card Number is required';
-    if (!formData.expiryDate.trim()) newErrors.expiryDate = 'Expiry Date is required';
-    if (!formData.cvv.trim()) newErrors.cvv = 'CVV is required';
 
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      throw new Error(message);
+    }
+
+    const responseData = await response.json();
+    console.log('Enrollment Successful:', responseData);
+    console.log(learnerId )
+    return responseData;
+
+  } catch (error) {
+    console.error('Enrollment Failed:', error);
+    // Handle errors (e.g., show a message to the user)
+  }
+}
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({
+    ...prev,
+    [name]: value.trim() // Optionally trim spaces, or you can handle trimming in validation
+  }));
+
+  // Validate immediately on change
+  const error = validateField(name, value);
+  if (error) {
+    setErrors(prev => ({ ...prev, [name]: error }));
+  } else {
+    const newErrors = {...errors};
+    delete newErrors[name];
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  const handlePayment = () => {
-    console.log("Processing payment", formData);
-    toast.success("Payment is successful!", {
-      theme: 'dark',
-      position: "bottom-right",
-    });
-    setTimeout(() => {
-      navigate('/learner/home'); // Change '/home' to your desired route
-    }, 2000);
-  };
+  }
+};
+const validateField = (name, value) => {
+  if (value === undefined || !value.trim()) return `${name} is required`;
+
+  // Add specific validations per field
+  switch (name) {
+    case 'cardNumber':
+      const re = /^[0-9]{16}$/;
+      if (!re.test(value)) return 'Card number must be 16 digits.';
+      break;
+    case 'expiryDate':
+      const reExp = /^(0[1-9]|1[0-2])\/[0-9]{2}$/;
+      if (!reExp.test(value)) return 'Expiry date must be in MM/YY format.';
+      break;
+    case 'cvv':
+      const reCvv = /^[0-9]{3,4}$/;
+      if (!reCvv.test(value)) return 'CVV must be 3 or 4 digits.';
+      break;
+    default:
+      break;
+  }
+  return null;
+};
+
+
+const handlePayment = () => {
+  console.log("Processing payment", formData);
+  toast.success("Payment is successful!", {
+    theme: 'dark',
+    position: "bottom-right",
+  });
+  setTimeout(() => {
+    navigate('/learner/home'); // Navigate to home page after payment
+  }, 2000);
+  EnrollToCourse(); // Call this only after validation and successful payment simulation
+}
  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you could add an API call to process payment
-    console.log("Form Submitted", formData);
-    // alert('Payment processed for ' + selectedItem.name);
-    submitPayment();
-  };
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  const isValid = validateField(); // This checks the entire form
+  if (isValid) {
+    handlePayment();  // Only proceed with payment if the form is valid
+  } else {
+    toast.error("Please correct the errors before submitting.", {
+      position: "bottom-right",
+      theme: "dark",
+    });
+  }
+};
+;
+
+
 
   return (
     <div className="container mx-auto py-8">
@@ -119,7 +186,7 @@ function CheckoutForm() {
           <input type="text" name="expiryDate" value={formData.expiryDate} onChange={handleChange} placeholder="Expiry Date (MM/YY)" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.expiryDate ? 'border-red-500' : ''}`} />
           {errors.expiryDate && <p className="text-red-500 text-sm">{errors.expiryDate}</p>}
           <input type="text" name="cvv" value={formData.cvv} onChange={handleChange} placeholder="CVV" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.cvv ? 'border-red-500' : ''}`} />
-          {errors.cvv && <p className="text-red-500 text-sm">{errors.cvv}</p>}<div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
+          {errors.cvv && <p className="text-red-500 text-sm">{validateField}</p>}<div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
   
   <p className="font-semibold">30-Day Money-Back Guarantee</p>
   <p>Full Lifetime Access</p>
@@ -158,8 +225,8 @@ function CheckoutForm() {
             <h3 className="text-lg font-semibold mb-2 text-gray-700">Total Price</h3>
             <p className="text-xl font-bold">${totalPrice}</p>
           </div>
-          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline block w-full" type="submit" onClick={handlePayment}>Complete Purchase</button>
-        </div>
+          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline block w-full" type="submit">Complete Purchase</button>        </div>
+        {/* onClick={handlePayment} */}
       </form>
       <ToastContainer />
     </div>
