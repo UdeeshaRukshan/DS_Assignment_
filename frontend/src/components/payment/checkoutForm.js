@@ -3,6 +3,7 @@ import CourseDetails from '../courseDetails/courseDetails';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { ToastContainer, toast } from 'react-toastify';
 import { message} from "antd";
+import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 function CheckoutForm() {
   const [enrollmentInfo, setEnrollmentInfo] = useState({
@@ -157,25 +158,49 @@ const validateField = (name, value) => {
   return null;
 };
 
+const handleRemoveFromCart = async (learnerId, courseId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8073/api/learner/cart/${learnerId}/${courseId}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-const handlePayment = () => {
+    if (response.ok) {
+      message.success("Course removed from cart successfully");
+    } else {
+      const data = await response.json();
+      message.error(data.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    message.error("An error occurred. Please try again.");
+  }
+};
+
+const handlePayment = async (learnerId, cartContents) => {
   console.log("Processing payment", formData);
   toast.success("Payment is successful!", {
     theme: 'dark',
     position: "bottom-right",
   });
+
+  // Assuming `EnrollToCourse` can handle promises and multiple courses
+  await Promise.all(cartContents.map(course => EnrollToCourse(course.courseId)));
+  await Promise.all(cartContents.map(course => handleRemoveFromCart(learnerId, course.courseId)));
+
   setTimeout(() => {
-    navigate('/learner/home'); // Navigate to home page after payment
+    navigate('/learner/home'); // Navigate to home page after payment and operations
   }, 2000);
-  EnrollToCourse(); // Call this only after validation and successful payment simulation
 }
- 
-const handleSubmit = (e) => {
+
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   const isValid = validateField(); // This checks the entire form
   if (isValid) {
-    handlePayment();  // Only proceed with payment if the form is valid
+    await handlePayment(learnerId, cartContents);  // Only proceed with payment if the form is valid
   } else {
     toast.error("Please correct the errors before submitting.", {
       position: "bottom-right",
@@ -183,7 +208,8 @@ const handleSubmit = (e) => {
     });
   }
 };
-;
+
+
 
 
 

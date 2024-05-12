@@ -10,7 +10,7 @@ export default function LearnerMyCourses() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [progressCount, setProgressCount] = useState(0);
-  const [contentCount, setContentCount] = useState(0);
+
   const learnerId = JSON.parse(
     atob(localStorage.getItem("token").split(".")[1])
   ).id;
@@ -65,6 +65,7 @@ export default function LearnerMyCourses() {
           courseIds.includes(course._id)
         );
         setCourses(enrolledCourses);
+        
       } else {
         message.error("Failed to fetch courses");
       }
