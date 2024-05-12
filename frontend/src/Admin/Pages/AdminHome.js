@@ -8,6 +8,7 @@ import {
     BookOutlined, HomeOutlined, BellOutlined, TeamOutlined,
 } from '@ant-design/icons';
 import {useNavigate} from "react-router-dom";
+import { RiAdminLine } from "react-icons/ri";
 import AdminAllCourses from "../Components/AdminAllCourses";
 import AdminCoursesReq from "../Components/AdminCoursesReq";
 import AdminProfile from "../Components/AdminProfile";
@@ -24,7 +25,6 @@ const AdminHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
         message.success('Logged out successfully');
         navigate('/login');
     };
-
     return (
         <Sider
             trigger={null}
@@ -34,6 +34,7 @@ const AdminHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
             className="custom-sider"
         >
             <div className="demo-logo-vertical" />
+            <h1 style={{color:"white"}}>Admin</h1>
             <Menu
                 theme="dark"
                 mode="inline"
@@ -80,6 +81,7 @@ const App = () => {
             />
             <Layout>
                 <Header style={{ padding: 0 }}>
+                    <h1 style = {{color:"white"}}>SkillHub</h1>
                     <button
                         type="button"
                         onClick={() => setCollapsed(!collapsed)}
