@@ -14,7 +14,7 @@ const stripePromise = loadStripe('pk_test_51PCn3w02viTsel8JLSMqJtAXz3N83i2SgnxOM
       {/* Wrap the CheckoutForm component with the Elements component and provide the Stripe promise */}
       <Elements stripe={stripePromise}>
         <CheckoutForm />
-        <Notification message="Payment is done"/>
+       <Notification message="Payment is done"/> 
       </Elements>
     </div>
   );

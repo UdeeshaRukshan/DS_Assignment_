@@ -21,18 +21,22 @@ const getAllTickets = async (req, res) => {
   }
 };
 
-// Retrieve a single Ticket by ID
+// Retrieve a single Ticket by learnerId
 const getTicketById = async (req, res) => {
   try {
-    const ticket = await Ticket.findById(req.params.id);
+    console.log("Searching for learnerId:", req.params.learnerId);
+    const ticket = await Ticket.find({ learnerId: req.params.learnerId });
     if (!ticket) {
-      return res.status(404).send();
+      return res.status(404).send("Ticket not found");
     }
     res.status(200).send(ticket);
   } catch (error) {
+    console.error("Error in getTicketByLearnerId:", error);
     res.status(500).send(error);
   }
 };
+
+
 
 // Delete a Ticket
 const deleteTicket = async (req, res) => {

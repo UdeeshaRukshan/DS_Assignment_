@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import axios from 'axios';  // Import axios
-
+import React, { useState ,useEffect} from "react";
+import axios from "axios"; // Import axios
+import { useNavigate } from "react-router-dom";
 const SubmitTicketForm = () => {
+  const storedLearnerId = localStorage.getItem("learnerId");
   const [formData, setFormData] = useState({
     name: "",
+    learnerId:storedLearnerId,
     email: "",
     category: "",
     subject: "",
@@ -13,23 +15,36 @@ const SubmitTicketForm = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    
+    console.log("Learner ID from storage:", storedLearnerId); // Check what is being retrieved
+    setFormData((currentData) => ({
+      ...currentData,
+      learnerId: storedLearnerId
+    }));
+  }, []);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting", formData);
-    // Use axios to call the backend API
+    console.log("Final submission data", formData); // Check the formData content just before axios call
+  
     try {
       const response = await axios.post("http://localhost:8074/api/tickets", formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log(response.data); // Process data received from backend
+      console.log("Response from server:", response.data); // Process data received from backend
+      navigate("/learner/home");
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
+  
+  
   return (
     <form
       onSubmit={handleSubmit}
@@ -37,7 +52,10 @@ const SubmitTicketForm = () => {
     >
       <h1 className="mb-4 font-semibold text-lg">Support Portal</h1>
       <div className="mb-6">
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
           Name:
         </label>
         <input
@@ -50,7 +68,10 @@ const SubmitTicketForm = () => {
         />
       </div>
       <div className="mb-6">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700"
+        >
           Email:
         </label>
         <input
@@ -63,7 +84,10 @@ const SubmitTicketForm = () => {
         />
       </div>
       <div className="mb-6">
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="category"
+          className="block text-sm font-medium text-gray-700"
+        >
           Category:
         </label>
         <select
@@ -81,7 +105,10 @@ const SubmitTicketForm = () => {
         </select>
       </div>
       <div className="mb-6">
-        <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="subject"
+          className="block text-sm font-medium text-gray-700"
+        >
           Subject:
         </label>
         <input
@@ -94,7 +121,10 @@ const SubmitTicketForm = () => {
         />
       </div>
       <div className="mb-6">
-        <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="message"
+          className="block text-sm font-medium text-gray-700"
+        >
           Message:
         </label>
         <textarea

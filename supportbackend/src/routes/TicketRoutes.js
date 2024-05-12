@@ -16,7 +16,7 @@ TicketRouter.post('/tickets', createTicket);
 TicketRouter.get('/tickets', getAllTickets);
 
 // Route to retrieve a specific ticket by ID
-TicketRouter.get('/tickets/:id', getTicketById);
+TicketRouter.get('/tickets/:learnerId', getTicketById);
 
 // Route to delete a specific ticket by ID
 TicketRouter.delete('/tickets/:id', deleteTicket);
