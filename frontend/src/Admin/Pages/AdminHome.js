@@ -34,9 +34,6 @@ const AdminHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
             className="custom-sider"
         >
             <div className="demo-logo-vertical" />
-            <div className='admin_profile_icon'>
-            <RiAdminLine  className = 'admin_profile_icon' style={{color:"white"}}/>
-            </div>
             <h1 style={{color:"white"}}>Admin</h1>
             <Menu
                 theme="dark"
@@ -84,6 +81,7 @@ const App = () => {
             />
             <Layout>
                 <Header style={{ padding: 0 }}>
+                    <h1 style = {{color:"white"}}>SkillHub</h1>
                     <button
                         type="button"
                         onClick={() => setCollapsed(!collapsed)}
