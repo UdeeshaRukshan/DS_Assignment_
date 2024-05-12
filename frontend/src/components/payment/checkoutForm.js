@@ -5,7 +5,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import { message} from "antd";
 import 'react-toastify/dist/ReactToastify.css';
 function CheckoutForm() {
-
+  const [enrollmentInfo, setEnrollmentInfo] = useState({
+    learnerId: '',
+    courseId: ''
+  })
   const [formData, setFormData] = useState({
     fullName: '',
     cardNumber: '',
@@ -16,9 +19,8 @@ function CheckoutForm() {
   const [errors, setErrors] = useState({});
   const learnerId = localStorage.getItem("learnerId");
   const [cartContents, setCartContents] = useState([]);
-  
   const [loading, setLoading] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [showNotification, setShowNotification] = useState(false); // State to control notification visibility
 
   const [selectedItem, setSelectedItem] = useState({
@@ -30,6 +32,7 @@ function CheckoutForm() {
     setShowNotification(true); // Show notification when payment is processed
     setTimeout(() => setShowNotification(false), 3000); // Optionally hide after few seconds
   };
+  
   useEffect(() => {
     fetchCartContents();
   },[])
@@ -38,6 +41,7 @@ function CheckoutForm() {
     const total = cartContents.reduce((acc, cartItem) => acc + cartItem.price, 0);
     setTotalPrice(total);
 }, [cartContents]);
+
   const fetchCartContents = async () => {
     setLoading(true);  // Start loading state
     try {
@@ -69,8 +73,13 @@ function CheckoutForm() {
     
 };
 const EnrollToCourse = async () => {
-  // Assume you're storing the token in localStorage or managing auth state elsewhere
   const token = localStorage.getItem('token');
+  const courseId = cartContents.length > 0 ? cartContents[0]._id : null;
+
+  if (!courseId) {
+    console.error("No course available to enroll.");
+    return;
+  }
 
   try {
     const response = await fetch('http://localhost:8073/api/learner/enroll-course', {
@@ -81,9 +90,8 @@ const EnrollToCourse = async () => {
       },
       body: JSON.stringify({
         learnerId: learnerId,
-        courseId: cartContents[0]._id, // Assuming you're enrolling in the first course in the cart
+        courseId: courseId,
       })
-      
     });
 
     if (!response.ok) {
@@ -93,14 +101,21 @@ const EnrollToCourse = async () => {
 
     const responseData = await response.json();
     console.log('Enrollment Successful:', responseData);
-    console.log(learnerId )
+
+    // Update state with enrollment details
+    setEnrollmentInfo({
+      learnerId: learnerId,
+      courseId: courseId
+    });
+
     return responseData;
 
   } catch (error) {
     console.error('Enrollment Failed:', error);
-    // Handle errors (e.g., show a message to the user)
+    // Optionally handle errors (e.g., show a message to the user)
   }
-}
+};
+
 
 const handleChange = (e) => {
   const { name, value } = e.target;

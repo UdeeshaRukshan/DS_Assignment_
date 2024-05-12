@@ -36,6 +36,7 @@ export default function LearnerMyCourses() {
         const enrollments = await response.json();
         const courseIds = enrollments.map((enrollment) => enrollment.course);
         await fetchCourses(courseIds);
+        console.log(enrollments);
       } else {
         message.error("Failed to fetch enrolled courses");
       }

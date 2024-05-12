@@ -7,7 +7,6 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
 import { v4 } from "uuid";
 import ReactPlayer from 'react-player';
-import HoverRating  from '../../components/feedback/muiFeedback';
 const GetAllCoursesByInstructorId = () => {
     const [courses, setCourses] = useState([]);
     const [filteredCourses, setFilteredCourses] = useState([]);
@@ -161,7 +160,6 @@ const GetAllCoursesByInstructorId = () => {
                             <p style={{ marginBottom: '10px' }}><strong>Description:</strong> {course.description}</p>
                             <p style={{ marginBottom: '10px' }}><strong>Requirements:</strong> {course.requirements}</p>
                             <p style={{ marginBottom: '10px' }}><strong>Price:</strong> {course.price}</p>
-                            <HoverRating/>
                             <p><strong>Status:</strong> {course.status}</p>
                         </Card>
                     ))}
