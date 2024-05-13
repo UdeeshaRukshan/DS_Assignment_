@@ -1,0 +1,11 @@
+.large-text-area {
+    min-height: 200px;  /* Ensure a larger starting height */
+    padding: 10px;      /* More padding inside the text area */
+    font-size: 16px;    /* Slightly larger font for better readability */
+}
+
+/* If you're using Bootstrap, you can add border and focus enhancements */
+.large-text-area:focus {
+    border-color: #80bdff;  /* A focus color that stands out */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);  /* A light blue shadow around the focus area */
+}

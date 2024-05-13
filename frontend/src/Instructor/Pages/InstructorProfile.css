@@ -1,0 +1,75 @@
+/* Enhances the overall container for a better full-page layout */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  
+  /* Adds specific styling to cards to improve visual separation and focus */
+  .card {
+    width: 100%;
+    max-width: 760px; /* Responsive width, fits well on most devices */
+    background-color: #fff;
+    border-radius: 8px; /* Soften the corners for a modern look */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadows for depth */
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  /* Styling for form layout to ensure elements are well spaced and aligned */
+  .form-item {
+    margin-bottom: 16px; /* Consistent spacing between form fields */
+  }
+  
+  /* Enhances input fields to be more interactive and visually appealing */
+  .input {
+    height: 40px;
+    padding: 8px 12px; /* Sufficient padding for text inside inputs */
+    border: 1px solid #d9d9d9;
+    border-radius: 4px; /* Rounded borders for a smoother appearance */
+    font-size: 16px; /* Larger font size for better readability */
+  }
+  
+  .input:focus {
+    border-color: #40a9ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2); /* Focus state with subtle outer glow */
+  }
+  
+  /* Custom styles for primary buttons to make them stand out and easy to interact with */
+  .button-primary {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    color: white;
+    font-size: 16px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .button-primary:hover {
+    background-color: #003a8c;
+    border-color: #003a8c;
+  }
+  
+  /* Additional responsive styling to adjust layout on smaller devices */
+  @media (max-width: 600px) {
+    .card {
+      padding: 15px;
+      margin-top: 10px;
+    }
+  
+    .input {
+      font-size: 14px;
+      padding: 6px 10px;
+    }
+  
+    .button-primary {
+      padding: 8px 20px;
+      font-size: 14px;
+    }
+  }
+  
