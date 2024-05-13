@@ -3,9 +3,13 @@ import CourseDetails from '../courseDetails/courseDetails';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { ToastContainer, toast } from 'react-toastify';
 import { message} from "antd";
+import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 function CheckoutForm() {
-
+  const [enrollmentInfo, setEnrollmentInfo] = useState({
+    learnerId: '',
+    courseId: ''
+  })
   const [formData, setFormData] = useState({
     fullName: '',
     cardNumber: '',
@@ -16,9 +20,8 @@ function CheckoutForm() {
   const [errors, setErrors] = useState({});
   const learnerId = localStorage.getItem("learnerId");
   const [cartContents, setCartContents] = useState([]);
-  
   const [loading, setLoading] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [showNotification, setShowNotification] = useState(false); // State to control notification visibility
 
   const [selectedItem, setSelectedItem] = useState({
@@ -30,6 +33,7 @@ function CheckoutForm() {
     setShowNotification(true); // Show notification when payment is processed
     setTimeout(() => setShowNotification(false), 3000); // Optionally hide after few seconds
   };
+  
   useEffect(() => {
     fetchCartContents();
   },[])
@@ -38,6 +42,7 @@ function CheckoutForm() {
     const total = cartContents.reduce((acc, cartItem) => acc + cartItem.price, 0);
     setTotalPrice(total);
 }, [cartContents]);
+
   const fetchCartContents = async () => {
     setLoading(true);  // Start loading state
     try {
@@ -68,42 +73,145 @@ function CheckoutForm() {
     setLoading(false); // End loading state
     
 };
+const EnrollToCourse = async () => {
+  const token = localStorage.getItem('token');
+  const courseId = cartContents.length > 0 ? cartContents[0]._id : null;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+  if (!courseId) {
+    console.error("No course available to enroll.");
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:8073/api/learner/enroll-course', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`  // Assuming Bearer token authentication
+      },
+      body: JSON.stringify({
+        learnerId: learnerId,
+        courseId: courseId,
+      })
     });
-  };
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.fullName.trim()) newErrors.fullName = 'Full Name is required';
-    if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card Number is required';
-    if (!formData.expiryDate.trim()) newErrors.expiryDate = 'Expiry Date is required';
-    if (!formData.cvv.trim()) newErrors.cvv = 'CVV is required';
 
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      throw new Error(message);
+    }
+
+    const responseData = await response.json();
+    console.log('Enrollment Successful:', responseData);
+
+    // Update state with enrollment details
+    setEnrollmentInfo({
+      learnerId: learnerId,
+      courseId: courseId
+    });
+
+    return responseData;
+
+  } catch (error) {
+    console.error('Enrollment Failed:', error);
+    // Optionally handle errors (e.g., show a message to the user)
+  }
+};
+
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({
+    ...prev,
+    [name]: value.trim() // Optionally trim spaces, or you can handle trimming in validation
+  }));
+
+  // Validate immediately on change
+  const error = validateField(name, value);
+  if (error) {
+    setErrors(prev => ({ ...prev, [name]: error }));
+  } else {
+    const newErrors = {...errors};
+    delete newErrors[name];
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  const handlePayment = () => {
-    console.log("Processing payment", formData);
-    toast.success("Payment is successful!", {
-      theme: 'dark',
+  }
+};
+const validateField = (name, value) => {
+  if (value === undefined || !value.trim()) return `${name} is required`;
+
+  // Add specific validations per field
+  switch (name) {
+    case 'cardNumber':
+      const re = /^[0-9]{16}$/;
+      if (!re.test(value)) return 'Card number must be 16 digits.';
+      break;
+    case 'expiryDate':
+      const reExp = /^(0[1-9]|1[0-2])\/[0-9]{2}$/;
+      if (!reExp.test(value)) return 'Expiry date must be in MM/YY format.';
+      break;
+    case 'cvv':
+      const reCvv = /^[0-9]{3,4}$/;
+      if (!reCvv.test(value)) return 'CVV must be 3 or 4 digits.';
+      break;
+    default:
+      break;
+  }
+  return null;
+};
+
+const handleRemoveFromCart = async (learnerId, courseId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8073/api/learner/cart/${learnerId}/${courseId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      message.success("Course removed from cart successfully");
+    } else {
+      const data = await response.json();
+      message.error(data.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    message.error("An error occurred. Please try again.");
+  }
+};
+
+const handlePayment = async (learnerId, cartContents) => {
+  console.log("Processing payment", formData);
+  toast.success("Payment is successful!", {
+    theme: 'dark',
+    position: "bottom-right",
+  });
+
+  // Assuming `EnrollToCourse` can handle promises and multiple courses
+  await Promise.all(cartContents.map(course => EnrollToCourse(course.courseId)));
+  await Promise.all(cartContents.map(course => handleRemoveFromCart(learnerId, course.courseId)));
+
+  setTimeout(() => {
+    navigate('/learner/home'); // Navigate to home page after payment and operations
+  }, 2000);
+}
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const isValid = validateField(); // This checks the entire form
+  if (isValid) {
+    await handlePayment(learnerId, cartContents);  // Only proceed with payment if the form is valid
+  } else {
+    toast.error("Please correct the errors before submitting.", {
       position: "bottom-right",
+      theme: "dark",
     });
-    setTimeout(() => {
-      navigate('/learner/home'); // Change '/home' to your desired route
-    }, 2000);
-  };
- 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you could add an API call to process payment
-    console.log("Form Submitted", formData);
-    // alert('Payment processed for ' + selectedItem.name);
-    submitPayment();
-  };
+  }
+};
+
+
+
+
 
   return (
     <div className="container mx-auto py-8">
@@ -119,7 +227,7 @@ function CheckoutForm() {
           <input type="text" name="expiryDate" value={formData.expiryDate} onChange={handleChange} placeholder="Expiry Date (MM/YY)" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.expiryDate ? 'border-red-500' : ''}`} />
           {errors.expiryDate && <p className="text-red-500 text-sm">{errors.expiryDate}</p>}
           <input type="text" name="cvv" value={formData.cvv} onChange={handleChange} placeholder="CVV" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.cvv ? 'border-red-500' : ''}`} />
-          {errors.cvv && <p className="text-red-500 text-sm">{errors.cvv}</p>}<div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
+          {errors.cvv && <p className="text-red-500 text-sm">{validateField}</p>}<div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
   
   <p className="font-semibold">30-Day Money-Back Guarantee</p>
   <p>Full Lifetime Access</p>
@@ -158,8 +266,8 @@ function CheckoutForm() {
             <h3 className="text-lg font-semibold mb-2 text-gray-700">Total Price</h3>
             <p className="text-xl font-bold">${totalPrice}</p>
           </div>
-          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline block w-full" type="submit" onClick={handlePayment}>Complete Purchase</button>
-        </div>
+          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline block w-full" type="submit">Complete Purchase</button>        </div>
+        {/* onClick={handlePayment} */}
       </form>
       <ToastContainer />
     </div>

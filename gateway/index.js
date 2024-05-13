@@ -47,22 +47,22 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
 });
-// app.post('/api/payment', async (req, res) => {
-//     try {
-//       const { token } = req.body;
-//       const paymentIntent = await stripe.paymentIntents.create({
-//         amount: 1000, // Amount in cents
-//         currency: 'usd',
-//         payment_method: token,
-//         confirmation_method: 'manual',
-//         confirm: true,
-//       });
-//       res.status(200).json({ success: true });
-//     } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ success: false, error: 'Error processing payment.' });
-//     }
-//   });
+app.post('/api/payment', async (req, res) => {
+    try {
+      const { token } = req.body;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: 1000, // Amount in cents
+        currency: 'usd',
+        payment_method: token,
+        confirmation_method: 'manual',
+        confirm: true,
+      });
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, error: 'Error processing payment.' });
+    }
+  });
 const port = process.env.PORT || 8075;
 
 app.listen(port, () => console.log(`Gateway up and running on port ${port}!`));

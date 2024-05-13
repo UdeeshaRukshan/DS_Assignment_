@@ -6,6 +6,9 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       required: [true, "Your name is required"],
     },
+    learnerId: {  // Corrected the field name here
+      type: String,
+    },
     email: {
       type: String,
       required: [true, "Your email is required"],

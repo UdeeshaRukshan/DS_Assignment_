@@ -21,17 +21,17 @@ function App() {
       <Router>
         <Routes>
           <Route path="/submit" element={<SubmitTicketForm />} />
-          {/* <Route path="/mytickets" element={<MyTickets />} /> */}
           <Route path="/payment" element={<PaymentComponent />} />
           <Route path="/emoji" element={<HoverRating/>} />  
           <Route path="/checkout" element={<CheckoutForm/>} />
           <Route path="/" element={<Home />} />
-         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/instructor/home" element={<InstructorHome />} />
-        <Route path="/learner/home" element={<LearnerHome />} />
-        <Route path="/admin/home" element={<AdminHome />} />
-            
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/instructor/home" element={<InstructorHome />} />
+          <Route path="/learner/home" element={<LearnerHome />} />
+          <Route path="/admin/home" element={<AdminHome />} />
+          <Route path="/feedback" element={<HoverRating />} />
+             
         </Routes>
       </Router>
     </div>
