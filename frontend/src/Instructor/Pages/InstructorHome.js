@@ -45,7 +45,7 @@ const InstructorHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
               marginRight: "20px",
               fontSize: "24px",
               className:"flex"
-            }} icon={<Image src="../Design.png" alt="Home Page Image"  fluid style={{ width: '30%', height: '90%' }}/>} key="5">
+            }} icon={<Image src="/Design.png" alt="Home Page Image"  fluid style={{ width: '30%', height: '90%' }}/>} key="5">
                 
                     SkillHub</Menu.Item>
                     <hr style={{marginTop:'3%', color:'white'}} />

@@ -127,7 +127,7 @@ const GetAllCoursesByInstructorId = () => {
 
     const handleenrollment = async () => {
         try {
-            const response = await axios.get(`http://localhost:8073/api/learner/all-course-learners/663cb00d7103c1a0201496db`);
+            const response = await axios.get(`http://localhost:8073/api/learner/all-course-learners/${selectedCourseId}`);
             if (Array.isArray(response.data.students)) {
                 setEnrolldata(response.data.students);
                 console.log("Enrollment API response:", response.data.students);
@@ -251,7 +251,7 @@ const GetAllCoursesByInstructorId = () => {
                         >
                             <p style={{ marginBottom: '10px' }}><strong>Description:</strong> {course.description}</p>
                             <p style={{ marginBottom: '10px' }}><strong>Requirements:</strong> {course.requirements}</p>
-                            <p style={{ marginBottom: '10px' }}><strong>Price:</strong> {course.price}</p>
+                            <p style={{ marginBottom: '10px' }}><strong>Price:</strong>$ {course.price}</p>
                             <p><strong>Status:</strong> {course.status}</p>
                         </Card>
                     ))}
