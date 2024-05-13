@@ -88,7 +88,7 @@ const LearnerAllCourses = () => {
     };
 
     const filteredCourses = courses.filter((course) =>
-        course.title.toLowerCase().includes(searchValue.toLowerCase())
+      course.title.toLowerCase().includes(searchValue.toLowerCase())
     );
 
     const handleCardClick = (course) => {
@@ -107,115 +107,127 @@ const LearnerAllCourses = () => {
     };
 
     return (
-        <div className="container">
-            <h3>All Courses</h3>
-            <center>
-                <Search
-                    placeholder="Search by course title"
-                    allowClear
-                    enterButton="Search"
-                    size="large"
-                    onSearch={(value) => setSearchValue(value)}
-                    style={{width: 400, marginBottom: "20px"}}
-                />
-            </center>
-            <Spin spinning={loading}>
-                <div className="row mt-4">
-                    {filteredCourses.map((course) => (
-                        <div key={course._id} className="col-md-4 mb-4">
-                            <Card className="rounded-5 shadow-sm" style={{width: "100%"}} onClick={() => handleCardClick(course)}>
-                                <div className="row">
-                                    <center>
-                                        <img src={courseBg} alt="course" style={{width: "150px"}}/>
-                                    </center>
-                                </div>
-                                <div className="row">
-                                    <center>
-                                        <h5>{course.title} </h5>
-                                    </center>
-                                </div>
-                                <div className="row">
-                                    <center>
-                                        <p className="fw-bold">${course.price}</p>
-                                    </center>
-                                </div>
-                                <div className="row">
-                                    <center>
-                                        <div
-                                            className="btn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleAddToCart(
-                                                    course._id,
-                                                    course.title,
-                                                    course.description,
-                                                    course.price
-                                                );
-                                            }}
-                                        >
-                                            <ShoppingCartOutlined style={{fontSize: '25px', color: '#9b9b9b'}}/>
-                                        </div>
-                                    </center>
-                                </div>
-                            </Card>
-                        </div>
-                    ))}
-                </div>
-            </Spin>
+      <div className="container">
+        <h3>All Courses</h3>
+        <center>
+          <Search
+            placeholder="Search by course title"
+            allowClear
+            enterButton="Search"
+            size="large"
+            onChange={(e) => setSearchValue(e.target.value)}
+            style={{ width: 400, marginBottom: "20px" }}
+          />
+        </center>
+        <Spin spinning={loading}>
+          <div className="row mt-4">
+            {filteredCourses.map((course) => (
+              <div key={course._id} className="col-md-4 mb-4">
+                <Card
+                  className="rounded-5 shadow-sm"
+                  style={{ width: "100%" }}
+                  onClick={() => handleCardClick(course)}
+                >
+                  <div className="row">
+                    <center>
+                      <img
+                        src={courseBg}
+                        alt="course"
+                        style={{ width: "150px" }}
+                      />
+                    </center>
+                  </div>
+                  <div className="row">
+                    <center>
+                      <h5>{course.title} </h5>
+                    </center>
+                  </div>
+                  <div className="row">
+                    <center>
+                      <p className="fw-bold">${course.price}</p>
+                    </center>
+                  </div>
+                  <div className="row">
+                    <center>
+                      <div
+                        className="btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(
+                            course._id,
+                            course.title,
+                            course.description,
+                            course.price
+                          );
+                        }}
+                      >
+                        <ShoppingCartOutlined
+                          style={{ fontSize: "25px", color: "#9b9b9b" }}
+                        />
+                      </div>
+                    </center>
+                  </div>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </Spin>
 
-            {/* Modal */}
-            <Modal
-                visible={isModalVisible}
-                onCancel={handleCancel}
-                footer={null}
-                width="90%"
-            >
-                {selectedCourse && (
-                    <>
-                        <div className="row">
-                            <div className="col">
-                                <div className="row">
-                                    <h1 className="text-light bg-dark mb-3">{selectedCourse.title}</h1>
-                                </div>
-                                <div className="row">
-                                    <p>{selectedCourse.description}</p>
-                                </div>
-                                <div className="row">
-                                    <h5>Requirements:</h5>
-                                    <p>{selectedCourse.requirements}</p>
-                                </div>
-                                <div className="row">
-                                    <h5>Price:</h5>
-                                    <p>${selectedCourse.price}</p>
-                                </div>
-                                <div className="row">
-                                    <div className="col-4">
-                                        <div
-                                            className="btn btn-warning w-100 mt-5"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleAddToCart(
-                                                    selectedCourse._id,
-                                                    selectedCourse.title,
-                                                    selectedCourse.description,
-                                                    selectedCourse.price
-                                                );
-                                            }}
-                                        >
-                                            Add to Cart
-                                        </div>
-                                    </div>
-                                    <div className="col"></div>
-                                </div>
-                            </div>
-                            <div className="col-4">
-                                <img src={courseBg} alt="course" style={{width: "100%"}}/>
-                            </div>
-                        </div>
-                    </>
-                )}
-            </Modal>
-        </div>
+        {/* Modal */}
+        <Modal
+          visible={isModalVisible}
+          onCancel={handleCancel}
+          footer={null}
+          width="90%"
+        >
+          {selectedCourse && (
+            <>
+              <div className="row">
+                <div className="col">
+                  <div className="row">
+                    <h1 className="text-light bg-dark mb-3">
+                      {selectedCourse.title}
+                    </h1>
+                  </div>
+                  <div className="row">
+                    <p>{selectedCourse.description}</p>
+                  </div>
+                  <div className="row">
+                    <h5>Requirements:</h5>
+                    <p>{selectedCourse.requirements}</p>
+                  </div>
+                  <div className="row">
+                    <h5>Price:</h5>
+                    <p>${selectedCourse.price}</p>
+                  </div>
+                  <div className="row">
+                    <div className="col-4">
+                      <div
+                        className="btn btn-warning w-100 mt-5"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(
+                            selectedCourse._id,
+                            selectedCourse.title,
+                            selectedCourse.description,
+                            selectedCourse.price
+                          );
+                        }}
+                      >
+                        Add to Cart
+                      </div>
+                    </div>
+                    <div className="col"></div>
+                  </div>
+                </div>
+                <div className="col-4">
+                  <img src={courseBg} alt="course" style={{ width: "100%" }} />
+                </div>
+              </div>
+            </>
+          )}
+        </Modal>
+      </div>
     );
 };
 

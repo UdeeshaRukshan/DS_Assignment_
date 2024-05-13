@@ -65,10 +65,10 @@ const LearnerProfile = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" style={{ maxWidth: "500px" }}>
       <center>
-        <UserOutlined style={{ fontSize: "50px" }} />
-        <h1>Learner Profile</h1>
+        <UserOutlined style={{ fontSize: "50px", color: "#1890ff" }} />
+        <h1 style={{ color: "#1890ff" }}>Learner Profile</h1>
       </center>
       {learnerProfile && (
         <Form
@@ -80,29 +80,42 @@ const LearnerProfile = () => {
             email: learnerProfile.email,
             description: learnerProfile.description,
           }}
+          style={{
+            backgroundColor: "#f0f2f5",
+            padding: "20px",
+            borderRadius: "8px",
+          }}
         >
           <Form.Item
-            label="Name"
+            label={<span style={{ fontWeight: "bold" }}>Name</span>}
             name="name"
             rules={[{ required: true, message: "Please input your name!" }]}
           >
-            <Input />
+            <Input style={{ borderRadius: "4px" }} />
           </Form.Item>
           <Form.Item
-            label="Email"
+            label={<span style={{ fontWeight: "bold" }}>Email</span>}
             name="email"
             rules={[
               { required: true, message: "Please input your email!" },
               { type: "email", message: "Please enter a valid email address!" },
             ]}
           >
-            <Input disabled />
+            <Input style={{ borderRadius: "4px" }} disabled />
           </Form.Item>
-          <Form.Item label="Description" name="description">
-            <Input.TextArea />
+          <Form.Item
+            label={<span style={{ fontWeight: "bold" }}>Description</span>}
+            name="description"
+          >
+            <Input.TextArea style={{ borderRadius: "4px" }} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              style={{ borderRadius: "4px" }}
+            >
               Update Profile
             </Button>
           </Form.Item>
