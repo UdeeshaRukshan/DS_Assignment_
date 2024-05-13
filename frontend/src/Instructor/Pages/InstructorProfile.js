@@ -77,12 +77,6 @@ const InstructorProfile = () => {
 
   return (
     <Container style={{ minHeight: "100vh" }}>
-      <center>
-        <h1>
-          <span className="text-danger">Instructor </span>
-          <span className="text-success"> Profile</span>
-        </h1>
-      </center>
       <Card style={{ width: 600, margin: "auto", marginTop: "50px" }}>
         <Form
           name="basic"
@@ -92,6 +86,12 @@ const InstructorProfile = () => {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
+        <center>
+        <h1>
+          <span className="text-danger">Instructor </span>
+          <span className="text-success"> Profile</span>
+        </h1>
+      </center>
           <Form.Item label="Name" name="name">
             <Input
               value={profile.name}

@@ -46,8 +46,8 @@ const InstructorLogin = () => {
     return (
         <Container style={{minHeight: '100vh'}}>
             <br/> <br/>
-            <Row justify="center" align="middle" style={{height: '100%'}}>
-                <Col xs={24} sm={20} md={16} lg={12} xl={8}>
+            <Row justify="center" align="middle" style={{height: '100%', width:'150%'}}>
+                <Col xs={24} sm={20} md={16} lg={12} xl={8} style={{marginLeft:'-30%'}}>
                     <center>
                         <Card style={{fontFamily: "revert", fontSize: '30px', color: 'cadetblue'}}>Instructor
                         Login
