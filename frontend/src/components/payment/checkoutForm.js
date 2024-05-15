@@ -296,7 +296,7 @@ const handleSubmit = async (e) => {
             <h3 className="text-lg font-semibold mb-2 text-gray-700">Total Price</h3>
             <p className="text-xl font-bold">${totalPrice}</p>
           </div>
-          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline block w-full" type="submit">Complete Purchase</button>        </div>
+          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline block w-full" type="submit" disabled={Object.values(formData).some(value => !value)}>Complete Purchase</button>        </div>
         {/* onClick={handlePayment} */}
       </form>
       <ToastContainer />

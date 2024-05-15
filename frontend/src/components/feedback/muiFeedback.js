@@ -23,7 +23,7 @@ function getLabelText(value) {
   return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
 }
 
-export default function HoverRating() {
+export default function HoverRating(props) {
   const [ratings, setRatings] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [hover, setHover] = useState(-1);
@@ -58,6 +58,7 @@ export default function HoverRating() {
     try {
       const response = await axios.post('http://localhost:8074/api/ratings', {
         user: learnerId,
+        courseId:props.courseId,
         value: selectedRating,
         comment: labels[selectedRating]
       });
@@ -76,34 +77,41 @@ export default function HoverRating() {
   }
 
   return (
-    <Box sx={{ width: 400, mx: 'auto', my: 4 }}>
-      <Rating
-        name="hover-feedback"
-        size="large"
-        value={selectedRating}
-        precision={0.5}
-        getLabelText={getLabelText}
-        onChange={(event, newValue) => {
-          setSelectedRating(newValue);
-        }}
-        onChangeActive={(event, newHover) => {
-          setHover(newHover);
-        }}
-        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-      />
-      {selectedRating !== null && (
-        <Box sx={{ mt: 2 }}>{labels[hover !== -1 ? hover : selectedRating]}</Box>
-      )}
-      <Button
-        onClick={handleRatingSubmit}
-        variant="contained"
-        color="primary"
-        disabled={loading}
-        sx={{ mt: 2 }}
-      >
-        Submit Rating
-      </Button>
-      <RatingsDisplay ratings={ratings} error={error} />
-    </Box>
+    <Box sx={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 9999,
+    }}>
+  <Rating
+    name="hover-feedback"
+    size="large"
+    value={selectedRating}
+    precision={0.5}
+    getLabelText={getLabelText}
+    onChange={(event, newValue) => {
+      setSelectedRating(newValue);
+    }}
+    onChangeActive={(event, newHover) => {
+      setHover(newHover);
+    }}
+    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+  />
+  {selectedRating !== null && (
+    <Box sx={{ mt: 2 }}>{labels[hover !== -1 ? hover : selectedRating]}</Box>
+  )}
+  <Button
+    onClick={handleRatingSubmit}
+    variant="contained"
+    color="primary"
+    disabled={loading}
+    sx={{ mt: 2, display: 'block', margin: '0 auto' }}
+  >
+    Submit Rating
+  </Button>
+</Box>
+
   );
 }

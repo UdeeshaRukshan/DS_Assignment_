@@ -23,6 +23,7 @@ function App() {
           <Route path="/submit" element={<SubmitTicketForm />} />
           <Route path="/payment" element={<PaymentComponent />} />
           <Route path="/emoji" element={<HoverRating/>} />  
+          <Route path="/rat" element={<RatingsDisplay/>} />
           <Route path="/checkout" element={<CheckoutForm/>} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

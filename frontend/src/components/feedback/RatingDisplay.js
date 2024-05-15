@@ -1,18 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Rating } from '@mui/material';
+import axios from 'axios';
+import StarIcon from '@mui/icons-material/Star';
+const RatingsDisplay = (props) => {
+  const [rating, setRatings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-const RatingsDisplay = ({ ratings, error }) => {
-    return (
-        <div>
-            {error && <Box sx={{ color: 'red', mt: 2 }}>{error}</Box>}
-            {ratings.map((rating) => ( // Only taking the first 5 ratings
-                <Box key={rating[0]._id} sx={{ mt: 2 }}>
-                    <Rating value={rating[0].value} readOnly />
-                    <p>{`Comment: ${rating[0].comment}`}</p>
-                </Box>
-            ))}
-        </div>
-    );
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8074/api/ratings/${props.idValue}`);
+        setRatings(response.data);
+        setLoading(false);
+        console.log(response.data)
+      } catch (err) {
+        setError('Failed to fetch ratings');
+        setLoading(false);
+        console.error('Error fetching ratings:', err);
+      }
+    };
+    console.log(rating)
+
+    fetchRatings();
+  }, []);
+
+  return (
+    <div>
+        <Box sx={{
+    
+    }}>
+  <Rating
+
+    value={5}
+    
+    readOnly  
+   
+  />
+        </Box>
+     
+    </div>
+  );
 };
 
 export default RatingsDisplay;

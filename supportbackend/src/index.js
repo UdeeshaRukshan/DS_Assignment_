@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 // const learner = require('./routes/learnerRoutes');
 const tickerRouter=require('./routes/TicketRoutes');
 const paymentRouter=require('./routes/paymentRoutes')
-const ratingRoutes=require('./routes/ratingRoutes')
+const RatingRouter=require('./routes/ratingRoutes')
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
@@ -29,7 +29,7 @@ mongoose
     .catch(err => console.log(err));
 
 app.use('/api', tickerRouter);
-app.use('/api', ratingRoutes);
+app.use('/api', RatingRouter);
 // app.use('/api', paymentRouter);
 
 app.use((err, req, res, next) => {
