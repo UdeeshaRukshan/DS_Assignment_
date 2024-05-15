@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Import the spinner
-
+import RatingsDisplay from './RatingDisplay';
 const labels = {
   0.5: 'Useless',
   1: 'Useless+',
@@ -27,7 +27,7 @@ export default function HoverRating() {
   const [ratings, setRatings] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [hover, setHover] = useState(-1);
-  const [loading, setLoading] = useState(true); // Start with loading true
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const learnerId = localStorage.getItem("learnerId");
 
@@ -52,7 +52,6 @@ export default function HoverRating() {
       alert('Please select a rating before submitting.');
       return;
     }
-
     setLoading(true);
     setError('');
 
@@ -104,13 +103,7 @@ export default function HoverRating() {
       >
         Submit Rating
       </Button>
-      {/* {error && <Box sx={{ color: 'red', mt: 2 }}>{error}</Box>}
-      {ratings.map((rating) => (
-        <Box key={rating._id} sx={{ mt: 2 }}>
-          <Rating value={rating.value} readOnly />
-          <p>{`Comment: ${rating.comment}`}</p>
-        </Box>
-      ))} */}
+      <RatingsDisplay ratings={ratings} error={error} />
     </Box>
   );
 }

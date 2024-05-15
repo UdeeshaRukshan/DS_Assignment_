@@ -14,7 +14,7 @@ import LearnerHome from "./Learner/Pages/LearnerHome";
 import AdminHome from "./Admin/Pages/AdminHome";
 import Signup from "./Main/Signup";
 import Home from "./Main/Home";
-
+import RatingsDisplay from './components/feedback/RatingDisplay.js';
 function App() {
   return (
     <div className="App">
