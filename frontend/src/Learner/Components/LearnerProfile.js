@@ -65,11 +65,11 @@ const LearnerProfile = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "500px" }}>
-      <center>
-        <UserOutlined style={{ fontSize: "50px", color: "#1890ff" }} />
-        <h1 style={{ color: "#1890ff" }}>Learner Profile</h1>
-      </center>
+    <div className="container mt-0" style={{ maxWidth: "600px" }}>
+      <div className="text-center mb-3">
+        <UserOutlined style={{ fontSize: "50px", color: "black" }} />
+        <h1 style={{ color: "black" }}>Learner Profile</h1>
+      </div>
       {learnerProfile && (
         <Form
           name="learner-profile-form"
@@ -79,11 +79,13 @@ const LearnerProfile = () => {
             name: learnerProfile.name,
             email: learnerProfile.email,
             description: learnerProfile.description,
+            password: "", // Initialize password as an empty string
           }}
           style={{
             backgroundColor: "#f0f2f5",
             padding: "20px",
             borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
           }}
         >
           <Form.Item
@@ -109,12 +111,26 @@ const LearnerProfile = () => {
           >
             <Input.TextArea style={{ borderRadius: "4px" }} />
           </Form.Item>
+          <Form.Item
+            label={<span style={{ fontWeight: "bold" }}>Password</span>}
+            name="password"
+            rules={[
+              { message: "Please input your password!" },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters long!",
+              },
+            ]}
+          >
+            <Input.Password style={{ borderRadius: "4px" }} />
+          </Form.Item>
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
               loading={loading}
               style={{ borderRadius: "4px" }}
+              className="w-100"
             >
               Update Profile
             </Button>

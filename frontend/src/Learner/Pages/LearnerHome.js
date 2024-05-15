@@ -6,7 +6,8 @@ import {
   HomeOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined, ShoppingCartOutlined,
+  MenuUnfoldOutlined,
+  ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +15,7 @@ import LearnerProfile from "../Components/LearnerProfile";
 import LearnerMyCourses from "../Components/LearnerMyCourses";
 import LearnerAllCourses from "../Components/LearnerAllCourses";
 import LearnerCart from "../Components/LearnerCart";
-import LearnerTickets from '../Components/LearnerTicket';
+import LearnerTickets from "../Components/LearnerTicket";
 const { Header, Sider, Content } = Layout;
 
 const LearnerHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
@@ -37,21 +38,21 @@ const LearnerHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
     >
       <div className="demo-logo-vertical" />
       <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          onSelect={onSelectMenuItem}
+        theme="dark"
+        mode="inline"
+        defaultSelectedKeys={["1"]}
+        onSelect={onSelectMenuItem}
       >
-        <Menu.Item key="1" icon={<HomeOutlined/>}>
-          My Courses
-        </Menu.Item>
-        <Menu.Item key="2" icon={<BookOutlined/>}>
+        <Menu.Item key="1" icon={<BookOutlined />}>
           All Courses
         </Menu.Item>
-        <Menu.Item key="3" icon={<UserOutlined/>}>
+        <Menu.Item key="2" icon={<HomeOutlined />}>
+          My Courses
+        </Menu.Item>
+        <Menu.Item key="3" icon={<UserOutlined />}>
           Profile
         </Menu.Item>
-        <hr style={{marginTop: "30px", color: "white"}}/>
+        <hr style={{ marginTop: "30px", color: "white" }} />
 
         <Menu.Item key="4" icon={<ShoppingCartOutlined />}>
           Cart
@@ -61,12 +62,12 @@ const LearnerHome = ({ collapsed, onCollapse, onSelectMenuItem }) => {
           My Tickets
         </Menu.Item>
 
-        <hr style={{marginTop: "20px", color: "white"}}/>
+        <hr style={{ marginTop: "20px", color: "white" }} />
         <Menu.Item
-            key="6"
-            style={{marginTop: "30px"}}
-            icon={<LogoutOutlined style={{color: "orangered"}}/>}
-            onClick={handleLogout}
+          key="6"
+          style={{ marginTop: "30px" }}
+          icon={<LogoutOutlined style={{ color: "orangered" }} />}
+          onClick={handleLogout}
         >
           Logout
         </Menu.Item>
