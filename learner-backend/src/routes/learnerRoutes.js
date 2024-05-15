@@ -15,33 +15,33 @@ router.put(
 
 router.get("/all-courses", auth.authenticate, learnerController.getAllCourses);
 router.get("/all-learners", learnerController.getAllLearners);
-router.post(
-    "/enroll-course",
-    auth.authenticate,
-    learnerController.enrollCourse
-);
-router.get(
-    "/enrollments/:learnerId",
-    auth.authenticate,
-    learnerController.getEnrollmentsByLearnerId
-);
+router.post('/enroll-course', auth.authenticate, learnerController.enrollCourse);
+router.get('/enrollments/:learnerId', auth.authenticate, learnerController.getEnrollmentsByLearnerId);
+router.get('/enrollments/:learnerId', auth.authenticate, learnerController.getEnrollmentsByLearnerId);
+
 router.delete(
-    "/enrollments",
-    auth.authenticate,
-    learnerController.unenrollCourse
+  "/enrollments",
+  auth.authenticate,
+  learnerController.unenrollCourse
 );
+
 router.put(
-    "/enrollments/progress",
-    auth.authenticate,
-    learnerController.updateProgress
+  "/enrollments/progress",
+  auth.authenticate,
+  learnerController.updateProgress
 );
+
 router.delete("/:learnerId", learnerController.deleteLearner);
 router.get(
-    "/enrollments/course/:courseId/learner/:learnerId",
-    learnerController.getEnrollmentByCourseIdAndLearnerId
+  "/enrollments/course/:courseId/learner/:learnerId",
+  learnerController.getEnrollmentByCourseIdAndLearnerId
 );
+
 router.post("/add-to-cart", auth.authenticate, learnerController.addToCart);
 router.get("/cart/:learnerId", learnerController.getAllCartContents);
-router.delete("/cart/:learnerId/:courseId", learnerController.removeCartContent);
+router.delete(
+  "/cart/:learnerId/:courseId",
+  learnerController.removeCartContent
+);
 
 module.exports = router;

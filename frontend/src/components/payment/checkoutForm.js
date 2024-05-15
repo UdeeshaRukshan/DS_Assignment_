@@ -5,11 +5,13 @@ import { ToastContainer, toast } from 'react-toastify';
 import { message} from "antd";
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
+
 function CheckoutForm() {
   const [enrollmentInfo, setEnrollmentInfo] = useState({
     learnerId: '',
     courseId: ''
   })
+
   const [formData, setFormData] = useState({
     fullName: '',
     cardNumber: '',
@@ -39,102 +41,130 @@ function CheckoutForm() {
   },[])
 
   useEffect(() => {
-    const total = cartContents.reduce((acc, cartItem) => acc + cartItem.price, 0);
-    setTotalPrice(total);
-}, [cartContents]);
+    const total = cartContents.reduce(
+      (acc, cartItem) => acc + cartItem.price,
+      0
+    );
+    setTotalPrice(total.toFixed(2));
+  }, [cartContents]);
 
   const fetchCartContents = async () => {
-    setLoading(true);  // Start loading state
+    setLoading(true); // Start loading state
     try {
-        const response = await fetch(
-            `http://localhost:8073/api/learner/cart/${learnerId}`,
-            {
-                method: "GET"
-            }
-        );
-
-        if (response.ok) {
-            const data = await response.json(); // Extract JSON from the response
-            // Useful place for a console log to debug or check data structure
-            console.log("Fetched cart contents:", data);
-
-            // Assuming data is an array of items where each item has a 'courses' array
-            const flattenedCourses = data.reduce((acc, cartItem) => {
-                return acc.concat(cartItem.courses); // Flatten all courses into a single array
-            }, []);
-            setCartContents(flattenedCourses); // Update state with the new cart contents
-        } else {
-            throw new Error('Failed to load the cart contents'); // Throw an error if response is not ok
+      const response = await fetch(
+        `http://localhost:8073/api/learner/cart/${learnerId}`,
+        {
+          method: "GET",
         }
+      );
+
+      if (response.ok) {
+        const data = await response.json(); // Extract JSON from the response
+        // Useful place for a console log to debug or check data structure
+        console.log("Fetched cart contents:", data);
+
+        // Assuming data is an array of items where each item has a 'courses' array
+        const flattenedCourses = data.reduce((acc, cartItem) => {
+          return acc.concat(cartItem.courses); // Flatten all courses into a single array
+        }, []);
+        setCartContents(flattenedCourses); // Update state with the new cart contents
+      } else {
+        throw new Error("Failed to load the cart contents"); // Throw an error if response is not ok
+      }
     } catch (error) {
-        console.error("Error fetching cart contents:", error);
-        message.error("An error occurred while fetching cart contents."); // Display error message to user
+      console.error("Error fetching cart contents:", error);
+      message.error("An error occurred while fetching cart contents."); // Display error message to user
     }
     setLoading(false); // End loading state
-    
-};
-const EnrollToCourse = async () => {
-  const token = localStorage.getItem('token');
-  const courseId = cartContents.length > 0 ? cartContents[0]._id : null;
+  };
+// const EnrollToCourse = async () => {
+//   const token = localStorage.getItem('token');
+//   const courseId = cartContents.length > 0 ? cartContents[0]._id : null;
 
-  if (!courseId) {
-    console.error("No course available to enroll.");
-    return;
-  }
+//   if (!courseId) {
+//     console.error("No course available to enroll.");
+//     return;
+//   }
 
+//   try {
+//     const response = await fetch('http://localhost:8073/api/learner/enroll-course', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': `Bearer ${token}`  // Assuming Bearer token authentication
+//       },
+//       body: JSON.stringify({
+//         learnerId: learnerId,
+//         courseId: courseId,
+//       })
+//     });
+
+//     if (!response.ok) {
+//       const message = `An error has occured: ${response.status}`;
+//       throw new Error(message);
+//     }
+
+//     const responseData = await response.json();
+//     console.log('Enrollment Successful:', responseData);
+
+//     // Update state with enrollment details
+//     setEnrollmentInfo({
+//       learnerId: learnerId,
+//       courseId: courseId
+//     });
+
+//     return responseData;
+
+//   } catch (error) {
+//     console.error('Enrollment Failed:', error);
+//     // Optionally handle errors (e.g., show a message to the user)
+//   }
+// };
+
+const EnrollToCourse = async (courseId) => {
   try {
-    const response = await fetch('http://localhost:8073/api/learner/enroll-course', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`  // Assuming Bearer token authentication
-      },
-      body: JSON.stringify({
-        learnerId: learnerId,
-        courseId: courseId,
-      })
-    });
+    const response = await fetch(
+      "http://localhost:8073/api/learner/enroll-course",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ learnerId, courseId }),
+      }
+    );
 
-    if (!response.ok) {
-      const message = `An error has occured: ${response.status}`;
-      throw new Error(message);
+    if (response.ok) {
+      message.success("Course enrolled successfully");
+    } else {
+      message.error("Failed to enroll in the course");
     }
-
-    const responseData = await response.json();
-    console.log('Enrollment Successful:', responseData);
-
-    // Update state with enrollment details
-    setEnrollmentInfo({
-      learnerId: learnerId,
-      courseId: courseId
-    });
-
-    return responseData;
-
   } catch (error) {
-    console.error('Enrollment Failed:', error);
-    // Optionally handle errors (e.g., show a message to the user)
+    console.error("Error:", error);
+    message.error("An error occurred. Please try again.");
   }
 };
 
 
 const handleChange = (e) => {
   const { name, value } = e.target;
-  setFormData(prev => ({
+  setFormData((prev) => ({
     ...prev,
-    [name]: value.trim() // Optionally trim spaces, or you can handle trimming in validation
+    [name]: value.trim(), // Optionally trim spaces, or you can handle trimming in validation
   }));
 
   // Validate immediately on change
   const error = validateField(name, value);
   if (error) {
-    setErrors(prev => ({ ...prev, [name]: error }));
+    setErrors((prev) => ({ ...prev, [name]: error }));
   } else {
-    const newErrors = {...errors};
+    const newErrors = { ...errors };
     delete newErrors[name];
     setErrors(newErrors);
   }
 };
+
 const validateField = (name, value) => {
   if (value === undefined || !value.trim()) return `${name} is required`;
 

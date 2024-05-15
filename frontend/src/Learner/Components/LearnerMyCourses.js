@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card, Spin, message, Modal, Progress } from "antd";
+import { Card, Spin, message, Modal } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPlayer from "react-player";
-import { Button } from "react-bootstrap";
+import { Button, ProgressBar } from "react-bootstrap";
+import courseBg from "../../assets/images/course-bg.png";
 
 export default function LearnerMyCourses() {
   const [courses, setCourses] = useState([]);
@@ -10,7 +11,6 @@ export default function LearnerMyCourses() {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [progressCount, setProgressCount] = useState(0);
-
   const learnerId = JSON.parse(
     atob(localStorage.getItem("token").split(".")[1])
   ).id;
@@ -36,7 +36,6 @@ export default function LearnerMyCourses() {
         const enrollments = await response.json();
         const courseIds = enrollments.map((enrollment) => enrollment.course);
         await fetchCourses(courseIds);
-        console.log(enrollments);
       } else {
         message.error("Failed to fetch enrolled courses");
       }
@@ -64,39 +63,40 @@ export default function LearnerMyCourses() {
         const enrolledCourses = data.filter((course) =>
           courseIds.includes(course._id)
         );
-        setCourses(enrolledCourses);
-        
+
+        // Reset progress for re-enrolled courses
+        const resetProgressCourses = enrolledCourses.map((course) => ({
+          ...course,
+          progressCount: 0,
+        }));
+
+        // Fetch progress for each course
+        const coursesWithProgress = await Promise.all(
+          resetProgressCourses.map(async (course) => {
+            const progressResponse = await fetch(
+              `http://localhost:8073/api/learner/enrollments/${learnerId}?courseId=${course._id}`,
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              }
+            );
+            if (progressResponse.ok) {
+              const progressData = await progressResponse.json();
+              const progressCount = progressData.reduce(
+                (count, enrollment) => count + enrollment.progress.length,
+                0
+              );
+              return { ...course, progressCount };
+            }
+            return { ...course, progressCount: 0 };
+          })
+        );
+
+        setCourses(coursesWithProgress);
       } else {
         message.error("Failed to fetch courses");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("An error occurred. Please try again.");
-    }
-  };
-
-  const fetchEnrollmentByCourseIdAndLearnerId = async (courseId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8073/api/learner/enrollments/${learnerId}?courseId=${courseId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const enrollments = await response.json();
-        // Calculate progress count from enrollments
-        const progressCount = enrollments.reduce(
-          (count, enrollment) => count + enrollment.progress.length,
-          0
-        );
-        setProgressCount(progressCount);
-      } else {
-        message.error("Failed to fetch enrollment details");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -131,19 +131,36 @@ export default function LearnerMyCourses() {
     }
   };
 
-  const handleCardClick = async (course) => {
-    setSelectedCourse(course);
-    setModalVisible(true);
-    await fetchEnrollmentByCourseIdAndLearnerId(course._id); // Call the function to fetch enrollment details
-  };
+  const fetchEnrollmentByCourseIdAndLearnerId = async (courseId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8073/api/learner/enrollments/${learnerId}?courseId=${courseId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-  const closeModal = () => {
-    setModalVisible(false);
-    setSelectedCourse(null);
+      if (response.ok) {
+        const enrollments = await response.json();
+        const progressCount = enrollments.reduce(
+          (count, enrollment) => count + enrollment.progress.length,
+          0
+        );
+        setProgressCount(progressCount);
+      } else {
+        message.error("Failed to fetch enrollment details");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.error("An error occurred. Please try again.");
+    }
   };
 
   const handleClickContent = async (contentId) => {
-    if (!selectedCourse) return; // Check if selectedCourse is null
+    if (!selectedCourse) return;
     try {
       const response = await fetch(
         "http://localhost:8073/api/learner/enrollments/progress",
@@ -159,8 +176,12 @@ export default function LearnerMyCourses() {
 
       if (response.ok) {
         message.success("Content marked as completed");
-        // Refetch enrollment details to update progress count
         await fetchEnrollmentByCourseIdAndLearnerId(selectedCourse._id);
+        // Update the progress dynamically
+        setSelectedCourse((prevCourse) => ({
+          ...prevCourse,
+          progressCount: prevCourse.progressCount + 1,
+        }));
       } else {
         message.error("Failed to mark content as completed");
       }
@@ -170,9 +191,20 @@ export default function LearnerMyCourses() {
     }
   };
 
+  const handleCardClick = async (course) => {
+    setSelectedCourse(course);
+    setModalVisible(true);
+    await fetchEnrollmentByCourseIdAndLearnerId(course._id);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedCourse(null);
+  };
+
   return (
-    <div className="container mt-5">
-      <h1>Learner My Courses</h1>
+    <div className="container mt-0">
+      <h2>Learner My Courses</h2>
       <Spin spinning={loading}>
         <div className="row mt-4">
           {courses.map((course) => (
@@ -182,16 +214,28 @@ export default function LearnerMyCourses() {
                 style={{ width: "100%" }}
                 onClick={() => handleCardClick(course)}
               >
-                <p>{course.description}</p>
+                <center>
+                  <img src={courseBg} alt="course" style={{ width: "150px" }} />
+                </center>
                 <p>{course.requirements}</p>
-                <p>Price: ${course.price}</p>
+                <div className="row"></div>
+                <ProgressBar
+                  now={(
+                    (course.progressCount / course.content.length) *
+                    100
+                  ).toFixed(2)}
+                  label={`${(
+                    (course.progressCount / course.content.length) *
+                    100
+                  ).toFixed(2)}%`}
+                  variant="success"
+                />
               </Card>
             </div>
           ))}
         </div>
       </Spin>
       <Modal
-        title={selectedCourse ? selectedCourse.title : ""}
         visible={modalVisible}
         onCancel={closeModal}
         footer={null}
@@ -199,36 +243,43 @@ export default function LearnerMyCourses() {
       >
         {selectedCourse && (
           <div>
-            <p>Description: {selectedCourse.description}</p>
-            <p>Requirements: {selectedCourse.requirements}</p>
-            <p>Price: ${selectedCourse.price}</p>
-            <h2>Course Content</h2>
-            {selectedCourse.content &&
-              selectedCourse.content.map((contentItem, index) => (
-                <div
-                  key={index}
-                  onClick={() => handleClickContent(contentItem._id)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <p>
-                    <strong>Title:</strong> {contentItem.title}
+            <h2 className="text-center text-secondary fw-bold fs-2">
+              Course Content
+            </h2>
+            {selectedCourse.content.map((contentItem, index) => (
+              <div
+                key={index}
+                onClick={() => handleClickContent(contentItem._id)}
+                style={{ cursor: "pointer" }}
+                className="mb-3"
+              >
+                <p className="fw-bold fs-5 text-dark">
+                  <strong>Title:</strong> {contentItem.title}
+                </p>
+                {contentItem.doc_type === "video" && contentItem.url && (
+                  <ReactPlayer url={contentItem.url} controls width="100%" />
+                )}
+                {contentItem.doc_type !== "video" && (
+                  <p className="fw-bold fs-6 text-dark">
+                    <strong>File:</strong>{" "}
+                    <a href={contentItem.url}>{contentItem.url}</a>
                   </p>
-                  {contentItem.doc_type === "video" && contentItem.url && (
-                    <ReactPlayer url={contentItem.url} controls width="100%" />
-                  )}
-                  {contentItem.doc_type !== "video" && (
-                    <p>
-                      <strong>File:</strong>{" "}
-                      <a href={contentItem.url}>{contentItem.url}</a>
-                    </p>
-                  )}
-                  <hr />
-                </div>
-              ))}
+                )}
+                <hr />
+              </div>
+            ))}
             <center>
-              <Progress
-                type="circle"
-                percent={(progressCount / selectedCourse.content.length) * 100}
+              <ProgressBar
+                now={(
+                  (progressCount / selectedCourse.content.length) *
+                  100
+                ).toFixed(2)}
+                label={`${(
+                  (progressCount / selectedCourse.content.length) *
+                  100
+                ).toFixed(2)}%`}
+                variant="success"
+                className="w-50"
               />
               <br />
               <br />
