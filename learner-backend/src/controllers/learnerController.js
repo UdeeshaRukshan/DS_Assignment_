@@ -11,6 +11,7 @@ const Enrollment = require("../models/EnrollmentModel");
 const axios = require("axios");
 const sendEmail=require('../../../supportbackend/src/utils/sendEmail')
 
+
 exports.createLearner = async (req, res) => {
   try {
     const { name, email, password, description } = req.body;
@@ -135,6 +136,13 @@ exports.enrollCourse = async (req, res) => {
     });
 
     await enrollment.save();
+    const response=await Learner.findById(learnerId);
+    sendEmail(
+      response.email, // Assuming `email` field in ticket has the recipient's email
+      'Course Enrolled',
+      `You have successfully enrolled in a course.`
+     
+  );
     
     res.status(200).json({ message: "Course enrolled successfully" });
   } catch (error) {
