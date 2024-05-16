@@ -250,33 +250,14 @@ const handleSubmit = async (e) => {
       <form onSubmit={handleSubmit} className="flex flex-wrap -mx-4">
         <div className="w-full lg:w-1/2 px-4">
         <h3 className="text-lg font-semibold mb-4 text-gray-700">Payment Details</h3>
-        <div>
-        <div className="mt-4 p-4 bg-blue-50 shadow-md rounded border border-blue-200">
-  <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Full Name" className={`border p-2 mb-2 w-full rounded shadow-sm ${errors.fullName ? 'border-red-500' : ''}`} />
-  {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
-
-  <input type="text" name="cardNumber" value={formData.cardNumber} onChange={handleChange} placeholder="Card Number" className={`border p-2 mb-2 w-full rounded shadow-sm ${errors.cardNumber ? 'border-red-500' : ''}`} />
-  {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
-
-  <div className="flex flex-row">
-    <input type="text" name="expiryDate" value={formData.expiryDate} onChange={handleChange} placeholder="Expiry Date (MM/YY)" className={`border p-2 mb-2 w-1/2 mr-2 rounded shadow-sm ${errors.expiryDate ? 'border-red-500' : ''}`} />
-    {errors.expiryDate && <p className="text-red-500 text-sm">{errors.expiryDate}</p>}
-
-    <input type="text" name="cvv" value={formData.cvv} onChange={handleChange} placeholder="CVV" className={`border p-2 mb-2 w-1/2 rounded shadow-sm ${errors.cvv ? 'border-red-500' : ''}`} />
-    {errors.cvv && <p className="text-red-500 text-sm">{validateField}</p>}
-  </div>
-</div>
-
-        </div>
-          {/* <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Full Name" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.fullName ? 'border-red-500' : ''}`} />
+          <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Full Name" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.fullName ? 'border-red-500' : ''}`} />
           {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
           <input type="text" name="cardNumber" value={formData.cardNumber} onChange={handleChange} placeholder="Card Number" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.cardNumber ? 'border-red-500' : ''}`} />
           {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
           <input type="text" name="expiryDate" value={formData.expiryDate} onChange={handleChange} placeholder="Expiry Date (MM/YY)" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.expiryDate ? 'border-red-500' : ''}`} />
           {errors.expiryDate && <p className="text-red-500 text-sm">{errors.expiryDate}</p>}
           <input type="text" name="cvv" value={formData.cvv} onChange={handleChange} placeholder="CVV" className={`border p-2 mb-4 w-full rounded shadow-sm ${errors.cvv ? 'border-red-500' : ''}`} />
-          {errors.cvv && <p className="text-red-500 text-sm">{validateField}</p>} */}
-          <div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
+          {errors.cvv && <p className="text-red-500 text-sm">{validateField}</p>}<div className="mt-4 p-4 bg-blue-50 shadow-md rounded text-sm border border-blue-200">
   
   <p className="font-semibold">30-Day Money-Back Guarantee</p>
   <p>Full Lifetime Access</p>
