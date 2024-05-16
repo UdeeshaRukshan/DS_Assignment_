@@ -9,6 +9,7 @@ const {
 } = require("../middleware/auth");
 const Enrollment = require("../models/EnrollmentModel");
 const axios = require("axios");
+const sendEmail=require('../../../supportbackend/src/utils/sendEmail')
 
 exports.createLearner = async (req, res) => {
   try {
@@ -88,7 +89,7 @@ exports.updateLearnerProfile = async (req, res) => {
     if (!updatedLearner) {
       return res.status(404).json({ message: "Learner not found" });
     }
-
+    
     res.status(200).json({
       message: "Learner profile updated successfully",
       learner: updatedLearner,
@@ -126,15 +127,15 @@ exports.getAllLearners = async (req, res) => {
 
 exports.enrollCourse = async (req, res) => {
   try {
+    
     const { learnerId, courseId } = req.body;
-
     const enrollment = new Enrollment({
       learnerId,
       course: courseId,
     });
 
     await enrollment.save();
-
+    
     res.status(200).json({ message: "Course enrolled successfully" });
   } catch (error) {
     console.error(error);

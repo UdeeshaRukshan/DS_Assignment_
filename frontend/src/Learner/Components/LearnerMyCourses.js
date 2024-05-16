@@ -4,7 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ReactPlayer from "react-player";
 import { Button, ProgressBar } from "react-bootstrap";
 import courseBg from "../../assets/images/course-bg.png";
-
+import HoverRating from "../../components/feedback/muiFeedback";
+import RatingsDisplay from "../../components/feedback/RatingDisplay";
 export default function LearnerMyCourses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -207,7 +208,7 @@ export default function LearnerMyCourses() {
       <h2>Learner My Courses</h2>
       <Spin spinning={loading}>
         <div className="row mt-4">
-          {courses.map((course) => (
+          {courses.map((course,index) => (
             <div key={course._id} className="col-md-4 mb-4">
               <Card
                 title={course.title}
@@ -230,6 +231,8 @@ export default function LearnerMyCourses() {
                   ).toFixed(2)}%`}
                   variant="success"
                 />
+                <RatingsDisplay key={index} idValue={course._id} />
+                
               </Card>
             </div>
           ))}
@@ -256,19 +259,26 @@ export default function LearnerMyCourses() {
                 <p className="fw-bold fs-5 text-dark">
                   <strong>Title:</strong> {contentItem.title}
                 </p>
+                
                 {contentItem.doc_type === "video" && contentItem.url && (
                   <ReactPlayer url={contentItem.url} controls width="100%" />
                 )}
+                 
                 {contentItem.doc_type !== "video" && (
                   <p className="fw-bold fs-6 text-dark">
                     <strong>File:</strong>{" "}
                     <a href={contentItem.url}>{contentItem.url}</a>
                   </p>
                 )}
+              
                 <hr />
+                <HoverRating key={index} idValue={contentItem._id} />
               </div>
+           
+              
             ))}
             <center>
+              
               <ProgressBar
                 now={(
                   (progressCount / selectedCourse.content.length) *

@@ -1,22 +1,32 @@
-const Rating = require('../models/rating.js');
+// controllers/ratingController.js
+const Rating = require('../models/rating');
 
-// Post a new rating
-exports.createRating = async (req, res) => {
+exports.getRatings = async (req, res) => {
   try {
-    const { user, value, comment } = req.body;
-    const newRating = await Rating.create({ user, value, comment });
-    res.status(201).json(newRating);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const ratings = await Rating.find();
+    res.json(ratings);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Get all ratings
-exports.getAllRatings = async (req, res) => {
+exports.getRating = async (req, res) => {
   try {
-    const ratings = await Rating.find({});
-    res.status(200).json(ratings);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    // Assuming you have a 'courseId' field in your Rating model
+    const ratings = await Rating.findOne({courseId:req.params.id });
+    res.json(ratings);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+exports.createRating = async (req, res) => {
+  const { user,courseId, value, comment } = req.body;
+  try {
+    const rating = await Rating.create({ user,courseId, value, comment });
+    res.status(201).json(rating);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };

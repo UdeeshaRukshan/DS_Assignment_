@@ -14,7 +14,7 @@ import LearnerHome from "./Learner/Pages/LearnerHome";
 import AdminHome from "./Admin/Pages/AdminHome";
 import Signup from "./Main/Signup";
 import Home from "./Main/Home";
-
+import RatingsDisplay from './components/feedback/RatingDisplay.js';
 function App() {
   return (
     <div className="App">
@@ -23,6 +23,7 @@ function App() {
           <Route path="/submit" element={<SubmitTicketForm />} />
           <Route path="/payment" element={<PaymentComponent />} />
           <Route path="/emoji" element={<HoverRating/>} />  
+          <Route path="/rat" element={<RatingsDisplay/>} />
           <Route path="/checkout" element={<CheckoutForm/>} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
