@@ -9,6 +9,8 @@ const {
 } = require("../middleware/auth");
 const Enrollment = require("../models/EnrollmentModel");
 const axios = require("axios");
+const sendEmail=require('../../../supportbackend/src/utils/sendEmail')
+
 
 exports.createLearner = async (req, res) => {
   try {
@@ -77,18 +79,18 @@ exports.viewLearnerProfile = async (req, res) => {
 exports.updateLearnerProfile = async (req, res) => {
   try {
     const learnerId = req.user.id;
-    const { name, description } = req.body;
+    const { name, description, password } = req.body;
 
     const updatedLearner = await Learner.findByIdAndUpdate(
       learnerId,
-      { name, description },
+      { name, description, password },
       { new: true }
     );
 
     if (!updatedLearner) {
       return res.status(404).json({ message: "Learner not found" });
     }
-
+    
     res.status(200).json({
       message: "Learner profile updated successfully",
       learner: updatedLearner,
@@ -126,15 +128,22 @@ exports.getAllLearners = async (req, res) => {
 
 exports.enrollCourse = async (req, res) => {
   try {
+    
     const { learnerId, courseId } = req.body;
-
     const enrollment = new Enrollment({
       learnerId,
       course: courseId,
     });
 
     await enrollment.save();
-
+    const response=await Learner.findById(learnerId);
+    sendEmail(
+      response.email, // Assuming `email` field in ticket has the recipient's email
+      'Course Enrolled',
+      `You have successfully enrolled in a course.`
+     
+  );
+    
     res.status(200).json({ message: "Course enrolled successfully" });
   } catch (error) {
     console.error(error);
@@ -243,12 +252,12 @@ exports.addToCart = async (req, res) => {
       cart = new Cart({
         learnerId,
         courses: [],
-        status: "pending"
+        status: "pending",
       });
     }
 
     const existingCourseIndex = cart.courses.findIndex(
-        course => course.courseId === courseId
+      (course) => course.courseId === courseId
     );
 
     if (existingCourseIndex !== -1) {
@@ -259,7 +268,7 @@ exports.addToCart = async (req, res) => {
       courseId,
       title,
       description,
-      price
+      price,
     });
 
     await cart.save();
@@ -293,7 +302,9 @@ exports.removeCartContent = async (req, res) => {
 
     console.log("Cart before removal:", cart);
 
-    cart.courses = cart.courses.filter(course => String(course.courseId) !== String(courseId));
+    cart.courses = cart.courses.filter(
+      (course) => String(course.courseId) !== String(courseId)
+    );
 
     await cart.save();
 
@@ -301,7 +312,9 @@ exports.removeCartContent = async (req, res) => {
 
     res.status(200).json({ message: "Course removed from cart successfully" });
   } catch (error) {
-    console.error('Error removing course from cart:', error);
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    console.error("Error removing course from cart:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 };

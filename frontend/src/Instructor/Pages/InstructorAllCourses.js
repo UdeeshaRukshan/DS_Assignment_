@@ -7,6 +7,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
 import { v4 } from "uuid";
 import ReactPlayer from 'react-player';
+import { Box, Rating } from '@mui/material';
 const GetAllCoursesByInstructorId = () => {
     const [courses, setCourses] = useState([]);
     const [filteredCourses, setFilteredCourses] = useState([]);
@@ -19,7 +20,23 @@ const GetAllCoursesByInstructorId = () => {
     const [fileUpload, setFileUpload] = useState(null);
     const [fileUrl, setFileUrl] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [ratings, setRatings] = useState([]);
 
+    useEffect(() => {
+        const fetchRatings = async () => {
+          try {
+            const response = await axios.get(`http://localhost:8074/api/ratings`);
+            setRatings(response.data);
+            setLoading(false);
+          } catch (err) {
+            setError('Failed to fetch ratings');
+            setLoading(false);
+            console.error('Error fetching ratings:', err);
+          }
+        };
+    
+        fetchRatings();
+      }, []);
     const uploadFile = async () => {
         if (!fileUpload) return Promise.reject("No file to upload");
         const fileRef = ref(storage, `/${fileUpload.name + v4()}`);
@@ -154,6 +171,7 @@ const GetAllCoursesByInstructorId = () => {
                                 transition: 'transform 0.3s ease',
                                 cursor: 'pointer'
                             }}
+                             
                             hoverable
                             onClick={() => handleViewDetails(course._id)}
                         >
@@ -161,6 +179,10 @@ const GetAllCoursesByInstructorId = () => {
                             <p style={{ marginBottom: '10px' }}><strong>Requirements:</strong> {course.requirements}</p>
                             <p style={{ marginBottom: '10px' }}><strong>Price:</strong> {course.price}</p>
                             <p><strong>Status:</strong> {course.status}</p>
+                            <div>
+         
+          
+        </div>
                         </Card>
                     ))}
                 </div>
@@ -190,6 +212,7 @@ const GetAllCoursesByInstructorId = () => {
                             <h2>Course Content</h2>
                             {course.content.map((contentItem, index) => (
                                 <div key={index}>
+                                    
                                     <p><strong>Title:</strong> {contentItem.title}</p>
                                     {contentItem.doc_type === 'video' && contentItem.url && (
                                         <ReactPlayer url={contentItem.url} controls width="100%" />
