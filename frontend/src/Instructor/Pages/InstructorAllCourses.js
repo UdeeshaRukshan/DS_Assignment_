@@ -7,6 +7,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase";
 import { v4 } from "uuid";
 import ReactPlayer from 'react-player';
+import HoverRating from '../../components/feedback/muiFeedback'; // Import the HoverRating component
+import RatingsDisplay from '../../components/feedback/RatingDisplay';
 import { Box, Rating } from '@mui/material';
 const GetAllCoursesByInstructorId = () => {
     const [courses, setCourses] = useState([]);
@@ -181,7 +183,12 @@ const GetAllCoursesByInstructorId = () => {
                             <p><strong>Status:</strong> {course.status}</p>
                             <div>
          
-          
+            {ratings.slice(0, 5).map((rating) => ( // Only taking the first 5 ratings
+                <Box key={rating._id} sx={{ mt: 2 }}>
+                    <Rating value={rating.value} readOnly />
+                    <p>{`Comment: ${rating.comment}`}</p>
+                </Box>
+            ))}
         </div>
                         </Card>
                     ))}
