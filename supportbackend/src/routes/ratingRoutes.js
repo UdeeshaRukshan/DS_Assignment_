@@ -1,11 +1,10 @@
+// routes/ratingRoutes.js
 const express = require('express');
-const ratingRouter = express.Router();
+const RatingRouter = express.Router();
 const ratingController = require('../controllers/ratingController');
 
-// Route to post a new rating
-ratingRouter.post('/ratings', ratingController.createRating);
+RatingRouter.get('/ratings', ratingController.getRatings);
+RatingRouter.post('/ratings', ratingController.createRating);
+RatingRouter.get('/ratings/:id', ratingController.getRating);
 
-// Route to get all ratings
-ratingRouter.get('/ratings', ratingController.getAllRatings);
-
-module.exports = ratingRouter;
+module.exports = RatingRouter;

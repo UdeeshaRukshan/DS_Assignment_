@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress'; // Import the spinner
-
+import RatingsDisplay from './RatingDisplay';
 const labels = {
   0.5: 'Useless',
   1: 'Useless+',
@@ -23,11 +23,11 @@ function getLabelText(value) {
   return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
 }
 
-export default function HoverRating() {
+export default function HoverRating(props) {
   const [ratings, setRatings] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [hover, setHover] = useState(-1);
-  const [loading, setLoading] = useState(true); // Start with loading true
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const learnerId = localStorage.getItem("learnerId");
 
@@ -52,13 +52,13 @@ export default function HoverRating() {
       alert('Please select a rating before submitting.');
       return;
     }
-
     setLoading(true);
     setError('');
 
     try {
       const response = await axios.post('http://localhost:8074/api/ratings', {
         user: learnerId,
+        courseId:props.courseId,
         value: selectedRating,
         comment: labels[selectedRating]
       });
@@ -77,40 +77,41 @@ export default function HoverRating() {
   }
 
   return (
-    <Box sx={{ width: 400, mx: 'auto', my: 4 }}>
-      <Rating
-        name="hover-feedback"
-        size="large"
-        value={selectedRating}
-        precision={0.5}
-        getLabelText={getLabelText}
-        onChange={(event, newValue) => {
-          setSelectedRating(newValue);
-        }}
-        onChangeActive={(event, newHover) => {
-          setHover(newHover);
-        }}
-        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-      />
-      {selectedRating !== null && (
-        <Box sx={{ mt: 2 }}>{labels[hover !== -1 ? hover : selectedRating]}</Box>
-      )}
-      <Button
-        onClick={handleRatingSubmit}
-        variant="contained"
-        color="primary"
-        disabled={loading}
-        sx={{ mt: 2 }}
-      >
-        Submit Rating
-      </Button>
-      {/* {error && <Box sx={{ color: 'red', mt: 2 }}>{error}</Box>}
-      {ratings.map((rating) => (
-        <Box key={rating._id} sx={{ mt: 2 }}>
-          <Rating value={rating.value} readOnly />
-          <p>{`Comment: ${rating.comment}`}</p>
-        </Box>
-      ))} */}
-    </Box>
+    <Box sx={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 9999,
+    }}>
+  <Rating
+    name="hover-feedback"
+    size="large"
+    value={selectedRating}
+    precision={0.5}
+    getLabelText={getLabelText}
+    onChange={(event, newValue) => {
+      setSelectedRating(newValue);
+    }}
+    onChangeActive={(event, newHover) => {
+      setHover(newHover);
+    }}
+    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+  />
+  {selectedRating !== null && (
+    <Box sx={{ mt: 2 }}>{labels[hover !== -1 ? hover : selectedRating]}</Box>
+  )}
+  <Button
+    onClick={handleRatingSubmit}
+    variant="contained"
+    color="primary"
+    disabled={loading}
+    sx={{ mt: 2, display: 'block', margin: '0 auto' }}
+  >
+    Submit Rating
+  </Button>
+</Box>
+
   );
 }

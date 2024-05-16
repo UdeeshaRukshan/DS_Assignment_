@@ -65,11 +65,11 @@ const LearnerProfile = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <center>
-        <UserOutlined style={{ fontSize: "50px" }} />
-        <h1>Learner Profile</h1>
-      </center>
+    <div className="container mt-0" style={{ maxWidth: "600px" }}>
+      <div className="text-center mb-3">
+        <UserOutlined style={{ fontSize: "50px", color: "black" }} />
+        <h1 style={{ color: "black" }}>Learner Profile</h1>
+      </div>
       {learnerProfile && (
         <Form
           name="learner-profile-form"
@@ -79,30 +79,59 @@ const LearnerProfile = () => {
             name: learnerProfile.name,
             email: learnerProfile.email,
             description: learnerProfile.description,
+            password: "", // Initialize password as an empty string
+          }}
+          style={{
+            backgroundColor: "#f0f2f5",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
           }}
         >
           <Form.Item
-            label="Name"
+            label={<span style={{ fontWeight: "bold" }}>Name</span>}
             name="name"
             rules={[{ required: true, message: "Please input your name!" }]}
           >
-            <Input />
+            <Input style={{ borderRadius: "4px" }} />
           </Form.Item>
           <Form.Item
-            label="Email"
+            label={<span style={{ fontWeight: "bold" }}>Email</span>}
             name="email"
             rules={[
               { required: true, message: "Please input your email!" },
               { type: "email", message: "Please enter a valid email address!" },
             ]}
           >
-            <Input disabled />
+            <Input style={{ borderRadius: "4px" }} disabled />
           </Form.Item>
-          <Form.Item label="Description" name="description">
-            <Input.TextArea />
+          <Form.Item
+            label={<span style={{ fontWeight: "bold" }}>Description</span>}
+            name="description"
+          >
+            <Input.TextArea style={{ borderRadius: "4px" }} />
+          </Form.Item>
+          <Form.Item
+            label={<span style={{ fontWeight: "bold" }}>Password</span>}
+            name="password"
+            rules={[
+              { message: "Please input your password!" },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters long!",
+              },
+            ]}
+          >
+            <Input.Password style={{ borderRadius: "4px" }} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              style={{ borderRadius: "4px" }}
+              className="w-100"
+            >
               Update Profile
             </Button>
           </Form.Item>

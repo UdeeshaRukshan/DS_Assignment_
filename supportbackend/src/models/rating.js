@@ -1,20 +1,30 @@
+// models/Rating.js
 const mongoose = require('mongoose');
 
 const ratingSchema = new mongoose.Schema({
   user: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Assuming you have a User model
     required: true
+  },
+  courseId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course', // Assuming you have a Course model
+    required: true,
   },
   value: {
     type: Number,
-    required: true,
-    min: 0.5,
-    max: 5
+    required: true
   },
   comment: {
-    type: String,
-    default: ''
+    type: String
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-}, { timestamps: true });
+});
 
-module.exports = mongoose.model('Rating', ratingSchema);
+const Rating = mongoose.model('Rating', ratingSchema);
+
+module.exports = Rating;

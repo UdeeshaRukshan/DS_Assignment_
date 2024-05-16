@@ -2,48 +2,54 @@ version: '3'
 services:
   support-backend:
     build: ./supportbackend
+    image: support-backend
     ports:
       - "8074:8074"
+    volumes:
+      - ./supportbackend:/usr/src/app
     environment:
-      - MONGODB_URI=${MONGODB_URI_SUPPORT}
+      - MONGODB_URI=mongodb+srv://rukshan:rukshan123@cluster0.w9lemr4.mongodb.net/ds?retryWrites=true&w=majority&appName=Cluster0
     depends_on:
       - mongodb
 
   learner-backend:
     build: ./learner-backend
+    image: learner-backend
     ports:
       - "8073:8073"
     environment:
-      - MONGODB_URI=${MONGODB_URI_LEARNER}
+      - MONGODB_URI=mongodb+srv://rukshan:rukshan123@cluster0.w9lemr4.mongodb.net/ds?retryWrites=true&w=majority&appName=Cluster0
     depends_on:
       - mongodb
-
   instructor-backend:
     build: ./instructor-backend
+    image: instructor-backend
     ports:
       - "8072:8072"
     environment:
-      - MONGODB_URI=${MONGODB_URI_INSTRUCTOR}
+      - MONGODB_URI=mongodb+srv://rukshan:rukshan123@cluster0.w9lemr4.mongodb.net/ds?retryWrites=true&w=majority&appName=Cluster0
     depends_on:
       - mongodb
-
   admin-backend:
     build: ./admin-backend
+    image: admin-backend
     ports:
       - "8071:8071"
     environment:
-      - MONGODB_URI=${MONGODB_URI_ADMIN}
+      - MONGODB_URI=mongodb+srv://rukshan:rukshan123@cluster0.w9lemr4.mongodb.net/ds?retryWrites=true&w=majority&appName=Cluster0
     depends_on:
       - mongodb
 
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - learner-backend
-      - instructor-backend
-      - admin-backend
+  # # frontend:
+  # #   build: ./frontend
+  # #   image: frontend
+  # #   ports:
+  # #     - "80:80"
+  #   depends_on:
+  #     - learner-backend
+  #     - instructor-backend
+  #     - admin-backend
+  #     - support-backend
 
   mongodb:
     image: mongo

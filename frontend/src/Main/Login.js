@@ -4,14 +4,14 @@ import LearnerLogin from "../Learner/Pages/LearnerLogin";
 import AdminLogin from "../Admin/Pages/AdminLogin";
 import InstructorLogin from "../Instructor/Components/InstructorLogin";
 import bgImg from "../assets/images/Login.jpg";
-
+import { Link } from "react-router-dom";
 
 export default function Login() {
-    const [activeTab, setActiveTab] = useState('learner');
+  const [activeTab, setActiveTab] = useState("learner");
 
-    const handleTabChange = (key) => {
-        setActiveTab(key);
-    };
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+  };
 
     return (
         <>
