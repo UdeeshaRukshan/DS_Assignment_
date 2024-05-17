@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Inform Docker that the container will listen on port 8073
-EXPOSE 8078
+EXPOSE 8073
 
 # Define the command to run the application when the container starts
 CMD ["npm", "start"]
