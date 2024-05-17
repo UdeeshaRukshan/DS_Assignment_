@@ -4,29 +4,32 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 
 const LearnerSignup = () => {
+  // State to manage loading state of sign-up button
   const [loading, setLoading] = useState(false);
-
+  // Function to handle form submission
   const onFinish = async (values) => {
     try {
       setLoading(true);
+      // Send sign-up request to backend
       const response = await axios.post(
         "http://localhost:8073/api/learner/register",
         values
       );
       setLoading(false);
+      // If sign-up successful, show success notification and redirect to login page
       if (response.status === 201) {
         notification.success({ message: "Learner created successfully" });
       }
       window.location.href = "/login";
     } catch (error) {
       setLoading(false);
+      // Show error notification with error message
       notification.error({
         message: "Failed to create learner",
         description: error.message,
       });
     }
   };
-  
 
   return (
     <div className="container mt-5">

@@ -4,15 +4,16 @@ import courseBg from "../../assets/images/course-bg.png";
 import { Link } from "react-router-dom";
 
 const LearnerCart = () => {
+  // State variables
   const [cartContents, setCartContents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const learnerId = localStorage.getItem("learnerId");
-
+  // Fetch cart contents when component mounts
   useEffect(() => {
     fetchCartContents();
   }, []);
-
+  // Calculate total price when cart contents change
   useEffect(() => {
     const total = cartContents.reduce(
       (acc, cartItem) => acc + cartItem.price,
@@ -20,7 +21,7 @@ const LearnerCart = () => {
     );
     setTotalPrice(total);
   }, [cartContents]);
-
+  // Function to fetch cart contents
   const fetchCartContents = async () => {
     setLoading(true);
     try {
@@ -46,7 +47,7 @@ const LearnerCart = () => {
     }
     setLoading(false);
   };
-
+  // Function to handle removing a course from cart
   const handleRemoveFromCart = async (courseId) => {
     try {
       const response = await fetch(
@@ -68,7 +69,7 @@ const LearnerCart = () => {
       message.error("An error occurred. Please try again.");
     }
   };
-
+  // Format total price to 2 decimal places
   const formattedTotalPrice = totalPrice.toFixed(2);
 
   return (

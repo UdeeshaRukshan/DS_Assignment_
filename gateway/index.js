@@ -20,12 +20,13 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
 
+// Define routes for different services
 const adminRoutes = ['/api/admin', '/api/admin/*'];
 const instructorRoutes = ['/api/instructor', '/api/instructor/*'];
 const learnerRoutes = ['/api/learner', '/api/learner/*'];
 const supportRoutes = ['/api', '/api/*'];
 
-
+// Route requests to appropriate microservices based on path
 app.use((req, res, next) => {
     const { path } = req;
 
