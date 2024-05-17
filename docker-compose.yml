@@ -40,6 +40,13 @@ services:
     depends_on:
       - mongodb
 
+  email-service:
+    build: ./email-service
+    image: email-service
+    ports:
+      - "8076:8076"
+    
+
   # # frontend:
   # #   build: ./frontend
   # #   image: frontend
