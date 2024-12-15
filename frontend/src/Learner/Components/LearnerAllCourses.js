@@ -7,6 +7,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 const { Search } = Input;
 
 const LearnerAllCourses = () => {
+  // State variables
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -14,11 +15,11 @@ const LearnerAllCourses = () => {
   const learnerId = JSON.parse(
     atob(localStorage.getItem("token").split(".")[1])
   ).id;
-
+  // Fetch all courses when component mounts
   useEffect(() => {
     fetchAllCourses();
   }, []);
-
+  // Function to fetch all courses
   const fetchAllCourses = async () => {
     setLoading(true);
     try {
@@ -47,7 +48,7 @@ const LearnerAllCourses = () => {
     }
     setLoading(false);
   };
-
+  // Function to handle adding a course to cart
   const handleAddToCart = async (courseId, title, description, price) => {
     try {
       const response = await fetch(
@@ -86,16 +87,16 @@ const LearnerAllCourses = () => {
       message.error("An error occurred. Please try again.");
     }
   };
-
+  // Filtered courses based on search value
   const filteredCourses = courses.filter((course) =>
     course.title.toLowerCase().includes(searchValue.toLowerCase())
   );
-
+  // Function to handle click on card
   const handleCardClick = (course) => {
     setSelectedCourse(course);
     showModal();
   };
-
+  // Modal state and functions
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {

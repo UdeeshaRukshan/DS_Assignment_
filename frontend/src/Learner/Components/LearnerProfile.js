@@ -4,15 +4,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { UserOutlined } from "@ant-design/icons";
 
 const LearnerProfile = () => {
+  // State variables to manage learner profile data and loading state
   const [learnerProfile, setLearnerProfile] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  // Function to fetch learner profile data from the server
   useEffect(() => {
     fetchLearnerProfile();
   }, []);
 
   const fetchLearnerProfile = async () => {
     try {
+      // Fetch learner profile data from the server
       const response = await fetch(
         "http://localhost:8073/api/learner/profile",
         {
@@ -24,20 +26,24 @@ const LearnerProfile = () => {
       );
 
       if (response.ok) {
+        // If successful, set the learner profile state
         const data = await response.json();
         setLearnerProfile(data);
       } else {
+        // If error, display error message
         message.error("Failed to fetch learner profile");
       }
     } catch (error) {
+      // Handle network or other errors
       console.error("Error:", error);
       message.error("An error occurred. Please try again.");
     }
   };
-
+  // Function to handle form submission and update learner profile
   const onFinish = async (values) => {
     setLoading(true);
     try {
+      // Send a PUT request to update learner profile
       const response = await fetch(
         "http://localhost:8073/api/learner/profile",
         {
@@ -51,13 +57,16 @@ const LearnerProfile = () => {
       );
 
       if (response.ok) {
+        // If successful, display success message and fetch updated profile
         message.success("Learner profile updated successfully");
         fetchLearnerProfile();
       } else {
+        // If error, display error message
         const data = await response.json();
         message.error(data.message);
       }
     } catch (error) {
+      // Handle network or other errors
       console.error("Error:", error);
       message.error("An error occurred. Please try again.");
     }
@@ -117,8 +126,8 @@ const LearnerProfile = () => {
             rules={[
               { message: "Please input your password!" },
               {
-                min: 6,
-                message: "Password must be at least 6 characters long!",
+                min: 4,
+                message: "Password must be at least 4 characters long!",
               },
             ]}
           >
